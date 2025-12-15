@@ -1,0 +1,21 @@
+# Node
+node_modules/
+dist/
+
+# Java
+target/
+*.class
+
+# Env
+.env
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# OS
+.DS_Store
+
+# Project
+infra/storage/
