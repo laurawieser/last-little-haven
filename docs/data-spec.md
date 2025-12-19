@@ -18,8 +18,9 @@ Die Spezifikation beschreibt die Kernentität **ArchiveEntry** mit zugehörigen 
 | `title` | String | * | Titel des Eintrags | max. 200 Zeichen, min. 5 | `"Cafe Anna"` |
 | `description` | String | * | Detaillierte Beschreibung | max. 2000 Zeichen | `"Historische queer-lesbische Bar..."` |
 | `type` | Enum: `SPACE`, `ARTEFACT`, `PHOTOGRAPHY`, `OTHER` | * | Eintrags-Typ | - | `"SPACE"` |
-| `authorName` | String | | Urheberin/-name | max. 100 Zeichen | `"Anna Berthold"` |
+| `authorName` | authorId | | Urheberin/-name | max. 100 Zeichen | `"Anna Berthold"` |
 | `creationDate` | Date/String (ISO) | * | Erstellungs-/Ereignis-Datum | YYYY-MM-DD | `"2025-12-18"` |
+| `createdBy` | userId | | Ersteller:in des Eintrags | User | `"aa-bb-ee"` |
 | `externalLinks` | Array<String> | | Externe Links | max. 5, gültige URLs | `["https://example.com/cafe-anna"]` |
 | `keywords` | Array<String> | | Suchbegriffe | max. 20, max. 50 Zeichen pro | `["Wien", "Bar", "queer"]` |
 | `status` | Enum: `DRAFT`, `SUBMITTED`, `APPROVED`, `DECLINED` | * | Moderationsstatus | - | `"APPROVED"` |
@@ -44,6 +45,16 @@ Die Spezifikation beschreibt die Kernentität **ArchiveEntry** mit zugehörigen 
 | `imageFiletype` | Enum: `JPG`, `PNG`, `PDF` | * | Dateityp | - | `"JPG"` |
 | `imageSizeMB` | Double | | Dateigröße | max. 10.0 MB | `2.1` |
 | `credits` | String | | Fotografin/Urheber | max. 100 Zeichen | `"Unsplash CC0"` |
+
+### Author (Separate Tabelle/FK)
+
+| Attribut | Typ | Pflicht | Beschreibung | Validierung | Beispiel |
+|----------|-----|---------|--------------|-------------|----------|
+| `id` | UUID / String | * | Eindeutige Autor*innen-ID  | UUID v4 | `"a3b2...9001"` |
+| `authorName` | String | * | Anzeigename der Urheber*in | min. 2, max. 100 Zeichen | `"Teresa Fischer"` |
+| `bio` | String | | Kurzbiografie | max. 2000 Zeichen | `"Fotografin und Medienforscherin"` |
+| `birthDate` | Date / String ISO | | Geburtsdatum | Format: YYYY-MM-DD | `"1990-05-12"` |
+| `deathDate` | Date / String ISO | | Sterbedatum | ≥ `birthDate` | `"2012-03-01"` |
 
 ## Validierungsregeln
 - **Title**: Min. 5, max. 200 Zeichen, keine HTML-Tags
