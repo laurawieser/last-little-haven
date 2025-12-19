@@ -1,0 +1,159 @@
+[
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174001",
+    "title": "Cafe Anna",
+    "description": "Historische queer-lesbische Bar im 6. Bezirk Wiens, wichtiger Treffpunkt der Community seit den 1980er Jahren.",
+    "type": "SPACE",
+    "authorName": "Anna Berthold",
+    "creationDate": "2025-12-18",
+    "externalLinks": ["https://example.com/cafe-anna"],
+    "keywords": ["Wien", "Bar", "queer", "lesbisch"],
+    "status": "APPROVED",
+    "location": {
+      "name": "Cafe Anna",
+      "city": "Wien",
+      "address": "Mariahilfer Straße 42",
+      "latitude": 48.1986,
+      "longitude": 16.3715
+    },
+    "mediaFiles": [
+      {
+        "imageUrl": "dummy/space_cafe_anna.jpg",
+        "imageFiletype": "JPG",
+        "imageSizeMB": 2.1,
+        "credits": "Unsplash CC0"
+      }
+    ]
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174002",
+    "title": "Queeres Kulturzentrum Rosa Villa",
+    "description": "Beratungs- und Wohnprojekt sowie kultureller Treffpunkt der LGBTQIA+-Community in Wien.",
+    "type": "SPACE",
+    "authorName": "Projektteam QWIEN",
+    "creationDate": "2025-12-10",
+    "keywords": ["Wien", "Community", "Beratung", "queer"],
+    "status": "APPROVED",
+    "location": {
+      "name": "Rosa Villa",
+      "city": "Wien",
+      "address": "Linke Wienzeile 102",
+      "latitude": 48.1901,
+      "longitude": 16.3582
+    },
+    "mediaFiles": [
+      {
+        "imageUrl": "dummy/space_villa.jpg",
+        "imageFiletype": "JPG",
+        "imageSizeMB": 3.4,
+        "credits": "Pexels CC0"
+      }
+    ]
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174003",
+    "title": "Frauenbuchhandlung Amazonia",
+    "description": "Feministische und queere Buchhandlung mit Schwerpunkt auf lesbischer Literatur.",
+    "type": "SPACE",
+    "creationDate": "2025-12-05",
+    "keywords": ["Wien", "Buchhandlung", "feministisch"],
+    "status": "SUBMITTED",
+    "location": {
+      "name": "Buchhandlung Amazonia",
+      "city": "Wien",
+      "latitude": 48.2082,
+      "longitude": 16.3738
+    },
+    "mediaFiles": []
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174004",
+    "title": "Plakat zum ersten Wiener Pride-Marsch",
+    "description": "Originalplakat des ersten Wiener Regenbogenparade-Vorlaufs aus den frühen 1990er Jahren.",
+    "type": "ARTEFACT",
+    "authorName": "Unbekannt",
+    "creationDate": "1992-06-01",
+    "keywords": ["Pride", "Plakat", "Wien", "Aktivismus"],
+    "status": "APPROVED",
+    "mediaFiles": [
+      {
+        "imageUrl": "dummy/artefact_pride_poster.jpg",
+        "imageFiletype": "JPG",
+        "imageSizeMB": 1.8,
+        "credits": "Archiv QWIEN"
+      }
+    ]
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174005",
+    "title": "Tagebuch einer Aktivistin",
+    "description": "Privates Tagebuch einer lesbischen Aktivistin aus Wien, dokumentiert das Leben zwischen 1978 und 1985.",
+    "type": "ARTEFACT",
+    "authorName": "Private Sammlung",
+    "creationDate": "1978-01-01",
+    "keywords": ["Aktivismus", "Tagebuch", "Geschichte"],
+    "status": "DRAFT",
+    "mediaFiles": [
+      {
+        "imageUrl": "dummy/artefact_diary_scan.pdf",
+        "imageFiletype": "PDF",
+        "imageSizeMB": 4.9,
+        "credits": "Private Leihgabe"
+      }
+    ]
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174006",
+    "title": "Fotografie: Barabend in den 1990ern",
+    "description": "Schwarz-weiß Fotografie eines Abends in einer Wiener Lesbenbar, aufgenommen 1994.",
+    "type": "PHOTOGRAPHY",
+    "authorName": "Eva Müller",
+    "creationDate": "1994-11-12",
+    "keywords": ["Fotografie", "Bar", "1990er"],
+    "status": "APPROVED",
+    "mediaFiles": [
+      {
+        "imageUrl": "dummy/photo_bar_1994.jpg",
+        "imageFiletype": "JPG",
+        "imageSizeMB": 2.7,
+        "credits": "Eva Müller"
+      }
+    ]
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174007",
+    "title": "Demonstration für Gleichberechtigung",
+    "description": "Fotodokumentation einer queeren Demonstration am Wiener Ring.",
+    "type": "PHOTOGRAPHY",
+    "authorName": "Jonas Jahns",
+    "creationDate": "2001-06-23",
+    "keywords": ["Demo", "Gleichberechtigung", "Wien"],
+    "status": "APPROVED",
+    "mediaFiles": [
+      {
+        "imageUrl": "dummy/photo_demo_2001.jpg",
+        "imageFiletype": "JPG",
+        "imageSizeMB": 3.1,
+        "credits": "Jonas Jahns"
+      }
+    ]
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174008",
+    "title": "Porträt einer Zeitzeugin",
+    "description": "Porträtfotografie einer lesbischen Zeitzeugin, aufgenommen für ein Oral-History-Projekt.",
+    "type": "PHOTOGRAPHY",
+    "authorName": "Studio Lichtblick",
+    "creationDate": "2015-09-14",
+    "keywords": ["Porträt", "Zeitzeugin", "Oral History"],
+    "status": "SUBMITTED",
+    "mediaFiles": [
+      {
+        "imageUrl": "dummy/photo_portrait.jpg",
+        "imageFiletype": "PNG",
+        "imageSizeMB": 2.0,
+        "credits": "Studio Lichtblick"
+      }
+    ]
+  }
+]
