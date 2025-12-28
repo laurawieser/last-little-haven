@@ -1,4 +1,10 @@
 import './styles/main.css';
+import { Routes, Route, Link } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import ArchivePage from './pages/ArchivePage';
+import MapPage from './pages/MapPage';
+import SubmitPage from './pages/SubmitPage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   return (
@@ -6,16 +12,22 @@ function App() {
       <header>
         <h1>Last Little Haven</h1>
         <nav>
-          <a href="/">Home</a>
-          <a href="/archive">Archiv</a>
-          <a href="/map">Karte</a>
-          <a href="/submit">Einreichen</a>
-          <a href="/admin">Admin</a>
+          <Link to="/">Home</Link>
+          <Link to="/archive">Archiv</Link>
+          <Link to="/map">Karte</Link>
+          <Link to="/submit">Einreichen</Link>
+          <Link to="/admin">Admin</Link>
         </nav>
       </header>
 
       <section>
-        <p>Willkommen bei Last Little Haven. Hier entsteht das Archiv deiner Spaziergänge.</p>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/archive" element={<ArchivePage />} />
+          <Route path="/map" element={<MapPage />} />
+          <Route path="/submit" element={<SubmitPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
       </section>
 
       <footer>
