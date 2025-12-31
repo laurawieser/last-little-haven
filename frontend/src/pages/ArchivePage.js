@@ -11,6 +11,9 @@ function ArchivePage() {
         .from('archive_entries')
         .select('*')
         .order('created_at', { ascending: false });
+      
+      console.log("archive_entries data:", data);
+      console.log("archive_entries error:", error);
 
       if (error) {
         console.error(error);
@@ -35,6 +38,7 @@ function ArchivePage() {
                 src={entry.image_url}
                 alt={entry.title}
                 className="card-image"
+                onError={(e) => { e.currentTarget.src = "https://placehold.co/300x300?text=LLH"; }}
               />
             )}
             <h2>{entry.title}</h2>
