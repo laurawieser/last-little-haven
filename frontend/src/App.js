@@ -1,5 +1,4 @@
-import './styles/main.css';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, NavLink } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ArchivePage from './pages/ArchivePage';
 import MapPage from './pages/MapPage';
@@ -18,15 +17,15 @@ function App() {
       <header>
         <h1>Last Little Haven</h1>
         <nav>
-          <Link to="/">Home</Link>
-          <Link to="/archive">Archive</Link>
-          <Link to="/map">Map</Link>
+          <NavLink to="/">Home</NavLink>
+          <NavLink to="/archive">Archive</NavLink>
+          <NavLink to="/map">Map</NavLink>
 
-          {user && <Link to="/submit">Einreichen</Link>}
-          {user && <Link to="/admin">Admin</Link>}
+          {user && <NavLink to="/submit">Einreichen</NavLink>}
+          {user && <NavLink to="/admin">Admin</NavLink>}
 
           {!user ? (
-            <Link to="/login">Login</Link>
+            <NavLink to="/login">Login</NavLink>
           ) : (
             <button type="button" onClick={() => signOut()} style={{ marginLeft: 8 }}>
               Logout

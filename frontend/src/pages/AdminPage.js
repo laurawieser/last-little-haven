@@ -1,5 +1,3 @@
-import '../styles/main.css';
-
 function AdminPage() {
     return (
         <main className="container-admin">

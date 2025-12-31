@@ -1,0 +1,18 @@
+/* styles/components/cards.css */
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 14px;
+}
+
+.card-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: calc(var(--radius) - 6px);
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+}

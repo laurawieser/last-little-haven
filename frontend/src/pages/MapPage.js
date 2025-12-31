@@ -1,5 +1,3 @@
-import '../styles/main.css';
-
 function MapPage() {
     return (
         <main className="container-map">

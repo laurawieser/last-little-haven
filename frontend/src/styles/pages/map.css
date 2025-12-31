@@ -1,0 +1,8 @@
+/* styles/pages/map.css */
+.map-wrap {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    background: var(--surface);
+}

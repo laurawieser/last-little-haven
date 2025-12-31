@@ -1,0 +1,45 @@
+/* src/styles/fonts.css */
+/* DSGVO: self-hosted fonts, keine externen Requests */
+
+/* Inter (Variable) */
+@font-face {
+    font-family: "Inter";
+    src: url("/fonts/Inter-4.1/InterVariable.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("/fonts/Inter-4.1/InterVariable-Italic.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* Libre Baskerville */
+@font-face {
+    font-family: "Libre Baskerville";
+    src: url("/fonts/Libre_Baskerville/LibreBaskerville-VariableFont_wght.ttf") format("truetype");
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Libre Baskerville";
+    src: url("/fonts/Libre_Baskerville/LibreBaskerville-Italic-VariableFont_wght.ttf") format("truetype");
+    font-weight: 400 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* Optional: Fraunces (Variable) */
+@font-face {
+    font-family: "Fraunces";
+    src: url("/fonts/fraunces/Fraunces-roman.var.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}

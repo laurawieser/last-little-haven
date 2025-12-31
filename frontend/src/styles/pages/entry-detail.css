@@ -1,0 +1,17 @@
+/* styles/pages/entry-detail.css */
+.entry-detail {
+    display: grid;
+    gap: 16px;
+}
+
+.entry-hero {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.entry-hero img {
+    width: 100%;
+    height: auto;
+}

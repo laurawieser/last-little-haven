@@ -1,0 +1,105 @@
+/* styles/base/typography.css */
+
+/* Self-hosted fonts (DSGVO friendly) */
+/* @font-face {
+    font-family: "Inter";
+    src: url("../../assets/fonts/Inter-4.1/InterVariable.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("../../assets/fonts/Inter-4.1/InterVariable-Italic.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Libre Baskerville";
+    src: url("../../assets/fonts/Libre_Baskerville/LibreBaskerville-VariableFont_wght.ttf") format("truetype");
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Libre Baskerville";
+    src: url("../../assets/fonts/Libre_Baskerville/LibreBaskerville-Italic-VariableFont_wght.ttf") format("truetype");
+    font-weight: 400 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* Optional display */
+@font-face {
+    font-family: "Fraunces";
+    src: url("../../assets/fonts/fraunces/Fraunces-roman.var.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+} */
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    line-height: 1.5;
+}
+
+a {
+    color: inherit;
+    text-decoration-color: color-mix(in srgb, var(--brand-red), transparent 55%);
+    text-underline-offset: 3px;
+}
+
+a:hover {
+    text-decoration-color: var(--brand-red);
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+    margin: 0 0 12px 0;
+}
+
+h1 {
+    font-size: clamp(28px, 2.6vw, 44px);
+    line-height: 1.15;
+}
+
+h2 {
+    font-size: 18px;
+    line-height: 1.25;
+}
+
+p {
+    margin: 0 0 12px 0;
+}
+
+.meta {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.meta .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--brand-red);
+    margin-right: 8px;
+    transform: translateY(-1px);
+}
+
+html,
+body,
+* {
+    font-family: "Inter" !important;
+}

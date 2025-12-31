@@ -1,0 +1,47 @@
+/* styles/components/forms.css */
+label {
+    display: grid;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+input,
+textarea,
+select {
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    outline: none;
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: color-mix(in srgb, var(--brand-red), transparent 50%);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-red), transparent 82%);
+}
+
+.alert {
+    border-radius: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    margin: 10px 0;
+}
+
+.alert--error {
+    border-color: color-mix(in srgb, var(--brand-red), transparent 60%);
+}
+
+.alert--success {
+    border-color: rgba(0, 128, 0, 0.25);
+}

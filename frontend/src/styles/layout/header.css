@@ -1,0 +1,52 @@
+/* styles/layout/header.css */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--bg), white 35%);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+}
+
+header>h1 {
+    width: min(var(--container), calc(100% - (var(--gutter) * 2)));
+    margin: 0 auto;
+    padding: 18px 0 10px;
+    font-family: var(--font-serif);
+}
+
+nav {
+    width: min(var(--container), calc(100% - (var(--gutter) * 2)));
+    margin: 0 auto;
+    padding: 0 0 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text);
+    padding: 7px 11px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: transparent;
+}
+
+nav a:hover {
+    border-color: color-mix(in srgb, var(--brand-red), transparent 70%);
+    background: color-mix(in srgb, var(--brand-red), transparent 92%);
+}
+
+nav a[aria-current="page"] {
+    border-color: var(--brand-red);
+    background: color-mix(in srgb, var(--brand-red), transparent 90%);
+}
+
+/* Logout button in nav */
+nav button {
+    margin-left: 6px;
+    /* ersetzt dein inline style */
+}

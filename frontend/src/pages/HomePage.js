@@ -1,5 +1,3 @@
-import '../styles/main.css';
-
 function HomePage() {
   return (
     <main className="container-home">

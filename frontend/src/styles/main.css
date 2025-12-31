@@ -1,0 +1,23 @@
+/* styles/main.css */
+
+/* base */
+@import "./base/reset.css";
+@import "./base/variables.css";
+@import "./base/typography.css";
+
+/* layout */
+@import "./layout/layout.css";
+@import "./layout/header.css";
+@import "./layout/footer.css";
+
+/* components */
+@import "./components/buttons.css";
+@import "./components/cards.css";
+@import "./components/forms.css";
+
+/* pages */
+@import "./pages/archive.css";
+@import "./pages/entry-detail.css";
+@import "./pages/map.css";
+@import "./pages/submit.css";
+@import "./pages/admin.css";

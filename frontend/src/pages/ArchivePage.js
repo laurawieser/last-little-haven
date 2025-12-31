@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/main.css';
 import { supabase } from '../lib/supabase';
 
 function ArchivePage() {

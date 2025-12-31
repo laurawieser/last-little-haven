@@ -1,0 +1,19 @@
+/* styles/layout/layout.css */
+
+.app>section {
+    width: min(var(--container), calc(100% - (var(--gutter) * 2)));
+    margin: 0 auto;
+    padding: 26px 0 40px;
+}
+
+/* Deine Page-Container können schlanker bleiben */
+.container-home,
+.container-archive,
+.container-map,
+.container-admin,
+.container-login,
+.container.submit {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}

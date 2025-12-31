@@ -1,0 +1,15 @@
+/* styles/layout/footer.css */
+
+footer {
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+    padding: 18px 0;
+    color: var(--muted);
+    background: var(--surface);
+}
+
+footer p {
+    width: min(var(--container), calc(100% - (var(--gutter) * 2)));
+    margin: 0 auto;
+    font-size: 13px;
+}

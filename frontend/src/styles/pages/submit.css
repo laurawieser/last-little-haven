@@ -1,0 +1,6 @@
+/* styles/pages/submit.css */
+.submit-grid {
+    display: grid;
+    gap: 12px;
+    max-width: 720px;
+}
