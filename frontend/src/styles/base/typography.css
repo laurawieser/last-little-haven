@@ -32,15 +32,7 @@
     font-style: italic;
     font-display: swap;
 }
-
-/* Optional display */
-@font-face {
-    font-family: "Fraunces";
-    src: url("../../assets/fonts/fraunces/Fraunces-roman.var.ttf") format("truetype");
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-} */
+*/
 
 body {
     background: var(--bg);
