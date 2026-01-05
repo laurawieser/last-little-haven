@@ -9,10 +9,13 @@ function LoginPage() {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
 
+    const [mode, setMode] = useState("login"); // "login" | "signup"
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const [busy, setBusy] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
+    const [infoMsg, setInfoMsg] = useState("");
 
     if (user) {
         navigate(from, { replace: true });
@@ -23,8 +26,26 @@ function LoginPage() {
         e.preventDefault();
         setBusy(true);
         setErrorMsg("");
+        setInfoMsg("");
 
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (mode === "login") {
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            setBusy(false);
+
+            if (error) return setErrorMsg(error.message);
+            navigate(from, { replace: true });
+            return;
+        }
+
+        // signup
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            // optional: zusätzliche Infos speichern (kommt in user_metadata an)
+            options: {
+                data: { signup_source: "webapp" },
+            },
+        });
 
         setBusy(false);
 
@@ -33,13 +54,21 @@ function LoginPage() {
             return;
         }
 
+
+        // Wenn Email confirmation an ist, ist session oft null und user muss Mail klicken
+        if (!data?.session) {
+            setInfoMsg("Fast fertig: Bitte bestätige deine E-Mail (Link wurde gesendet).");
+            return;
+        }
+
+        // Wenn confirmation aus ist: direkt eingeloggt
         navigate(from, { replace: true });
     }
 
     return (
         <main className="container-login">
 
-            <h1>Login</h1>
+            <h1>{mode === "login" ? "Login" : "Registrieren"}</h1>
 
             <form onSubmit={onSubmit} style={{ display: "grid", gap: 12, maxWidth: 420 }}>
                 <label>
@@ -49,25 +78,46 @@ function LoginPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        autoComplete="email"
                     />
                 </label>
 
                 <label>
-                    Passwort
+                    Password
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        autoComplete={mode === "login" ? "current-password" : "new-password"}
                     />
                 </label>
 
                 {errorMsg && <p style={{ color: "crimson" }}>{errorMsg}</p>}
+                {infoMsg && <p style={{ color: "green" }}>{infoMsg}</p>}
 
                 <button type="submit" disabled={busy}>
-                    {busy ? "…" : "Login"}
+                    {busy ? "…" : mode === "login" ? "Einloggen" : "Account erstellen"}
                 </button>
             </form>
+
+            <p style={{ marginTop: 12 }}>
+                {mode === "login" ? (
+                    <>
+                        Noch keinen Account?{" "}
+                        <button type="button" onClick={() => setMode("signup")}>
+                            Registrieren
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        Schon registriert?{" "}
+                        <button type="button" onClick={() => setMode("login")}>
+                            Zum Login
+                        </button>
+                    </>
+                )}
+            </p>
         </main>
 
     );
