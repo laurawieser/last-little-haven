@@ -23,3 +23,7 @@ textarea,
 select {
     font: inherit;
 }
+
+html {
+  overflow-y: scroll;
+}

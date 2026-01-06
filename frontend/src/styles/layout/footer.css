@@ -1,15 +1,25 @@
 /* styles/layout/footer.css */
 
 footer {
-    border-top: 1px solid var(--border);
-    margin-top: 40px;
-    padding: 18px 0;
-    color: var(--muted);
-    background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 18px 0;
+  color: var(--muted);
+  background: var(--surface);
+  
+  /* FULL WIDTH */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;  
 }
 
 footer p {
-    width: min(var(--container), calc(100% - (var(--gutter) * 2)));
-    margin: 0 auto;
-    font-size: 13px;
+  /* Text zentriert, aber max. Container-Breite */
+  max-width: min(var(--container), calc(100% - (var(--gutter) * 2)));
+  margin: 0 auto;
+  padding: 0 var(--gutter, 20px);
+  font-size: 13px;
+  text-align: center;
 }
