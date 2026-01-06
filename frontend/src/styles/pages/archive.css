@@ -22,3 +22,14 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card-link:hover .card {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}

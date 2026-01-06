@@ -1,13 +1,21 @@
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { 
+  BrowserRouter, 
+  Routes, 
+  Route, 
+  NavLink 
+} from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ArchivePage from './pages/ArchivePage';
 import MapPage from './pages/MapPage';
 import SubmitPage from './pages/SubmitPage';
 import AdminPage from './pages/AdminPage';
 import LoginPage from "./pages/LoginPage";
+import DetailPage from './pages/DetailPage';
 
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { useAuth } from "./auth/AuthContext";
+
+
 
 function App() {
   const { user, signOut } = useAuth();
@@ -41,6 +49,8 @@ function App() {
           <Route path="/map" element={<MapPage />} />
 
           <Route path="/login" element={<LoginPage />} />
+
+          <Route path="/archive/:id" element={<DetailPage />} />
 
           <Route
             path="/submit"
