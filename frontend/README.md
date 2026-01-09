@@ -68,3 +68,13 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Roles & Admin
+
+Users are authenticated via Supabase.
+Roles are stored in `public.profiles`.
+
+- role = "user" → can submit entries
+- role = "admin" → can approve, reject, delete entries
+
+Admin UI is available at `/admin` and protected via RLS and frontend routing.

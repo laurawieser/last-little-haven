@@ -1,12 +1,126 @@
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
+
 function AdminPage() {
-    return (
-        <main className="container-admin">
-            <h1>Moderation</h1>
-            <div className="card">
-                Einreichung wartet auf Freigabe
+  const [pending, setPending] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [busyId, setBusyId] = useState(null);
+  const [error, setError] = useState("");
+
+  async function loadPending() {
+    setLoading(true);
+    setError("");
+
+    const { data, error } = await supabase
+      .from("archive_entries")
+      .select("id,title,type,created_at,created_by,status")
+      .eq("status", "SUBMITTED")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("loadPending error:", error);
+      setError(error.message);
+      setPending([]);
+    } else {
+      setPending(data ?? []);
+    }
+
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    loadPending();
+  }, []);
+
+  async function setStatus(entryId, status) {
+    setBusyId(entryId);
+    setError("");
+
+    const { error } = await supabase
+      .from("archive_entries")
+      .update({ status })
+      .eq("id", entryId);
+
+    if (error) {
+      console.error("setStatus error:", error);
+      setError(error.message);
+    } else {
+      // remove from list immediately
+      setPending((prev) => prev.filter((e) => e.id !== entryId));
+    }
+
+    setBusyId(null);
+  }
+
+  async function deleteEntry(entryId) {
+    setBusyId(entryId);
+    setError("");
+
+    const { error } = await supabase
+      .from("archive_entries")
+      .delete()
+      .eq("id", entryId);
+
+    if (error) {
+      console.error("deleteEntry error:", error);
+      setError(error.message);
+    } else {
+      setPending((prev) => prev.filter((e) => e.id !== entryId));
+    }
+
+    setBusyId(null);
+  }
+
+  return (
+    <main className="container-admin">
+      <h1>Moderation</h1>
+
+      {error && <p style={{ color: "crimson" }}>{error}</p>}
+
+      {loading ? (
+        <p>Lade…</p>
+      ) : pending.length === 0 ? (
+        <p>Keine offenen Einreichungen.</p>
+      ) : (
+        <section style={{ display: "grid", gap: 12 }}>
+          {pending.map((e) => (
+            <div key={e.id} className="card" style={{ display: "grid", gap: 8 }}>
+              <div>
+                <strong>{e.title}</strong>
+                <div style={{ opacity: 0.8 }}>{e.type}</div>
+                <div style={{ opacity: 0.6, fontSize: 12 }}>
+                  {e.created_at ? new Date(e.created_at).toLocaleString() : ""}
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <button
+                  disabled={busyId === e.id}
+                  onClick={() => setStatus(e.id, "APPROVED")}
+                >
+                  ✅ Approve
+                </button>
+
+                <button
+                  disabled={busyId === e.id}
+                  onClick={() => setStatus(e.id, "DECLINED")}
+                >
+                  ❌ Decline
+                </button>
+
+                <button
+                  disabled={busyId === e.id}
+                  onClick={() => deleteEntry(e.id)}
+                >
+                  🗑 Delete
+                </button>
+              </div>
             </div>
-        </main>
-    );
+          ))}
+        </section>
+      )}
+    </main>
+  );
 }
 
 export default AdminPage;

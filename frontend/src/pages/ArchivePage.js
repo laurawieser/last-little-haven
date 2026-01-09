@@ -11,6 +11,7 @@ function ArchivePage() {
       const { data, error } = await supabase
         .from('archive_entries')
         .select('*')
+        .eq('status', 'APPROVED')
         .order('created_at', { ascending: false });
       
       console.log("archive_entries data:", data);

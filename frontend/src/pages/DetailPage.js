@@ -6,6 +6,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import '../styles/pages/entry-detail.css';
+import { useAuth } from "../auth/AuthContext";
 
 // Leaflet Icon Fix
 delete L.Icon.Default.prototype._getIconUrl;
@@ -18,6 +19,7 @@ L.Icon.Default.mergeOptions({
 function DetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { role } = useAuth();
   const [entry, setEntry] = useState(null);
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -56,6 +58,25 @@ function DetailPage() {
   const handleBack = () => {
     navigate(-1);
   };
+
+  async function handleDelete() {
+    const ok = window.confirm("Eintrag wirklich löschen? Dies kann nicht rückgängig gemacht werden.");
+    if (!ok) return;
+
+    const { error } = await supabase
+      .from("archive_entries")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error("delete error:", error);
+      alert("Löschen fehlgeschlagen: " + error.message);
+      return;
+    }
+
+    navigate("/archive");
+  }
+
 
   if (loading) return <div className="loading">Laden...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -106,6 +127,18 @@ function DetailPage() {
             <button className="btn-back" onClick={handleBack}>
               ← Zurück zum Archiv
             </button>
+
+             {/* ✅ Only visible for admins */}
+            {role === "admin" && (
+              <button
+                className="btn-delete"
+                onClick={handleDelete}
+                style={{ marginLeft: 12 }}
+              >
+                🗑 Löschen
+              </button>
+            )}
+            
           </div>
         </div>
       </article>
