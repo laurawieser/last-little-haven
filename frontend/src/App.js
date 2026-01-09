@@ -18,7 +18,8 @@ import { useAuth } from "./auth/AuthContext";
 
 
 function App() {
-  const { user, signOut } = useAuth();
+  
+  const { user, role, signOut } = useAuth();
 
   return (
     <main className="app">
@@ -30,7 +31,7 @@ function App() {
           <NavLink to="/map">Map</NavLink>
 
           {user && <NavLink to="/submit">Einreichen</NavLink>}
-          {user && <NavLink to="/admin">Admin</NavLink>}
+          {user && role === "admin" && <NavLink to="/admin">Admin</NavLink>}
 
           {!user ? (
             <NavLink to="/login">Login</NavLink>
@@ -64,7 +65,7 @@ function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requireRole="admin">
                 <AdminPage />
               </ProtectedRoute>
             }

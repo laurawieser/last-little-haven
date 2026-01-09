@@ -7,19 +7,46 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState(null);
+
 
   useEffect(() => {
     let mounted = true;
 
+    
+    async function loadProfile(userId) {
+      if (!userId) {
+        setProfile(null);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .single();
+
+      if (!mounted) return;
+
+      if (error) {
+        console.error("loadProfile error:", error);
+        setProfile(null);
+      } else {
+        setProfile(data);
+      }
+    }
+
     supabase.auth
       .getSession()
-      .then(({ data, error }) => {
+      .then(async ({ data, error }) => {
+
         if (!mounted) return;
         if (error) console.error("getSession error:", error);
 
         const s = data?.session ?? null;
         setSession(s);
         setUser(s?.user ?? null);
+        await loadProfile(s?.user?.id);
         setLoading(false);
       })
       .catch((err) => {
@@ -31,6 +58,7 @@ export function AuthProvider({ children }) {
     const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession ?? null);
       setUser(newSession?.user ?? null);
+      loadProfile(newSession?.user?.id);
     });
 
     return () => {
@@ -43,10 +71,11 @@ export function AuthProvider({ children }) {
     () => ({
       session,
       user,
+      role: profile?.role ?? null,
       loading,
       signOut: () => supabase.auth.signOut(),
     }),
-    [session, user, loading]
+    [session, user, profile, loading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
