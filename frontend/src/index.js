@@ -26,6 +26,7 @@ import "./styles/pages/entry-detail.css";
 import "./styles/pages/map.css";
 import "./styles/pages/submit.css";
 import "./styles/pages/admin.css";
+import "./styles/pages/home.css";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

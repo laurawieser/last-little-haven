@@ -1,0 +1,133 @@
+/* Hero */
+.hero-home {
+  display: grid;
+  gap: 18px;
+  padding: 64px 0 28px;
+}
+
+.logo-home {
+  width: 120px;
+  height: auto;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}   
+
+/* About */
+.about-home {
+  padding: 44px 0;
+}
+
+.about-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.about-image-col img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* Highlight */
+.about-highlight {
+  margin-top: 22px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Features */
+.features-row {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.feature-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+/* Contact */
+.contact-home {
+  padding: 44px 0;
+}
+
+.contact-row {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.contact-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+/* Events */
+.events-home {
+  padding: 44px 0 64px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .about-row {
+    grid-template-columns: 1fr;
+  }
+  .features-row,
+  .contact-row {
+    grid-template-columns: 1fr;
+  }
+  .logo-home {
+    width: 96px;
+  }
+}
+
+/* How it works */
+.howitworks-home {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.howitworks-item h3 {
+  margin-bottom: 8px;
+}
+
+.howitworks-item p {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .howitworks-home {
+    grid-template-columns: 1fr;
+  }
+}
+
+.howitworks-cta {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+
