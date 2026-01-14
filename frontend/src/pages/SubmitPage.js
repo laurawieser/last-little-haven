@@ -65,22 +65,22 @@ function SubmitPage() {
 
             <form onSubmit={onSubmit} style={{ display: "grid", gap: 12, maxWidth: 520 }}>
                 <label>
-                    Titel
+                    Title
                     <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" />
                 </label>
 
                 <label>
-                    Beschreibung
+                    Description
                     <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
                 </label>
 
                 <label>
-                    Typ
+                    Type
                     <input value={type} onChange={(e) => setType(e.target.value)} type="text" placeholder="z.B. Ort, Artefakt, Fotografie" />
                 </label>
 
                 <label>
-                    Bild-URL (optional)
+                    Image URL (optional)
                     <input
                         value={imageUrl}
                         onChange={(e) => setImageUrl(e.target.value)}

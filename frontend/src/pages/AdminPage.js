@@ -78,9 +78,9 @@ function AdminPage() {
       {error && <p style={{ color: "crimson" }}>{error}</p>}
 
       {loading ? (
-        <p>Lade…</p>
+        <p>Loading...</p>
       ) : pending.length === 0 ? (
-        <p>Keine offenen Einreichungen.</p>
+        <p>No open submissions.</p>
       ) : (
         <section style={{ display: "grid", gap: 12 }}>
           {pending.map((e) => (

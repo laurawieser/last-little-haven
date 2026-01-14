@@ -46,7 +46,7 @@ function DetailPage() {
           setLocation(locData);
         }
       } catch (err) {
-        setError('Eintrag konnte nicht geladen werden.');
+        setError('Entry could not be loaded.');
       } finally {
         setLoading(false);
       }
@@ -60,7 +60,7 @@ function DetailPage() {
   };
 
   async function handleDelete() {
-    const ok = window.confirm("Eintrag wirklich löschen? Dies kann nicht rückgängig gemacht werden.");
+    const ok = window.confirm("Are you sure you want to delete this entry?");
     if (!ok) return;
 
     const { error } = await supabase
@@ -78,9 +78,9 @@ function DetailPage() {
   }
 
 
-  if (loading) return <div className="loading">Laden...</div>;
+  if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">{error}</div>;
-  if (!entry) return <div>Eintrag nicht gefunden.</div>;
+  if (!entry) return <div>Entry not found.</div>;
 
   return (
     <main className="container-detail">
@@ -97,7 +97,7 @@ function DetailPage() {
           
           {location && (
             <div className="detail-location">
-              <h2>Ort</h2>
+              <h2>Location</h2>
               <p><strong>{location.name}</strong></p>
               <p>{location.address}, {location.city}</p>
               
@@ -125,7 +125,7 @@ function DetailPage() {
           
           <div className="detail-actions">
             <button className="btn-back" onClick={handleBack}>
-              ← Zurück zum Archiv
+              ← Back to archive
             </button>
 
              {/* ✅ Only visible for admins */}
@@ -135,7 +135,7 @@ function DetailPage() {
                 onClick={handleDelete}
                 style={{ marginLeft: 12 }}
               >
-                🗑 Löschen
+                🗑 Delete
               </button>
             )}
             

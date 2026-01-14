@@ -178,7 +178,7 @@ function ArchivePage() {
       {/* Filters */}
       <section className="archive-filters" style={{ display: "grid", gap: 12, marginBottom: 16 }}>
         <label>
-          Suche (Titel/Beschreibung)
+          Search (title/description)
           <input
             type="text"
             value={q}
@@ -189,7 +189,7 @@ function ArchivePage() {
 
         <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
           <label>
-            Typ
+            Type
             <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
               <option value="">Alle</option>
               {typeOptions.map((t) => (
@@ -201,7 +201,7 @@ function ArchivePage() {
           </label>
 
           <label>
-            Stadt
+            City
             <select value={cityFilter} onChange={(e) => setCityFilter(e.target.value)}>
               <option value="">Alle</option>
               {cityOptions.map((c) => (
@@ -213,7 +213,7 @@ function ArchivePage() {
           </label>
 
           <label>
-            Ort / Space
+            Space / Location
             <select value={placeFilter} onChange={(e) => setPlaceFilter(e.target.value)}>
               <option value="">Alle</option>
               {placeOptions.map((p) => (
@@ -227,7 +227,7 @@ function ArchivePage() {
 
         <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
           <label>
-            Zeitraum von
+            From
             <input
               type="date"
               value={fromDate}
@@ -236,7 +236,7 @@ function ArchivePage() {
           </label>
 
           <label>
-            Zeitraum bis
+            To
             <input
               type="date"
               value={toDate}
@@ -246,7 +246,7 @@ function ArchivePage() {
 
           <div style={{ display: "flex", alignItems: "end", gap: 8 }}>
             <button type="button" onClick={resetFilters}>
-              Filter zurücksetzen
+              Reset filters
             </button>
           </div>
         </div>
@@ -260,7 +260,7 @@ function ArchivePage() {
       {/* Results */}
       <section className="archive-list">
         {!loading && filteredEntries.length === 0 && (
-          <p>Keine Einträge gefunden.</p>
+          <p>No entries found.</p>
         )}
 
         {filteredEntries.map((entry) => (
@@ -288,7 +288,7 @@ function ArchivePage() {
 
               {entry.originDate && (
                 <p style={{ opacity: 0.65, fontSize: 12 }}>
-                  Entstehung: {entry.originDate}
+                  Origin date: {entry.originDate}
                 </p>
               )}
             </div>

@@ -138,7 +138,7 @@ function MapPage() {
                 style={{ marginTop: 8, width: "100%" }}
                 onClick={() => navigate(`/detail/${entry.id}`)}
               >
-                Details öffnen
+                Open details
               </button>
             </div>
           </Popup>
@@ -149,7 +149,7 @@ function MapPage() {
 
   return (
     <main className="container-map">
-      <h1>Karte</h1>
+      <h1>Map</h1>
 
       {loading && <div className="loading">Laden...</div>}
       {error && <div className="error">{error}</div>}
@@ -173,7 +173,7 @@ function MapPage() {
 
       {!loading && !error && items.length === 0 && (
         <p style={{ marginTop: 12 }}>
-          Keine Einträge mit Ortsbezug gefunden.
+          No entries with location found.
         </p>
       )}
     </main>
