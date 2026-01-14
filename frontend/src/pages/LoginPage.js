@@ -104,16 +104,16 @@ function LoginPage() {
             <p style={{ marginTop: 12 }}>
                 {mode === "login" ? (
                     <>
-                        Noch keinen Account?{" "}
+                        No account yet?{" "}
                         <button type="button" onClick={() => setMode("signup")}>
-                            Registrieren
+                            Register
                         </button>
                     </>
                 ) : (
                     <>
-                        Schon registriert?{" "}
+                        Already registered?{" "}
                         <button type="button" onClick={() => setMode("login")}>
-                            Zum Login
+                            Go to login
                         </button>
                     </>
                 )}
