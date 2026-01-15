@@ -258,10 +258,16 @@ function AdminPage() {
 
                   <label>
                     Type
-                    <input
+                    <select
                       value={draft.type}
-                      onChange={(ev) => setDraft((d) => ({ ...d, type: ev.target.value }))}
-                    />
+                      onChange={(ev) =>
+                        setDraft((d) => ({ ...d, type: ev.target.value }))
+                      }
+                    >
+                      <option value="photography">Photography</option>
+                      <option value="artifact">Artifact</option>
+                      <option value="space">Space</option>
+                    </select>
                   </label>
 
                   <label>
@@ -282,9 +288,9 @@ function AdminPage() {
                         setDraft((d) => ({ ...d, status: ev.target.value }))
                       }
                     >
-                      <option value="SUBMITTED">SUBMITTED</option>
-                      <option value="APPROVED">APPROVED</option>
-                      <option value="DECLINED">DECLINED</option>
+                      <option value="SUBMITTED">Submitted</option>
+                      <option value="APPROVED">Approved</option>
+                      <option value="DECLINED">Declined</option>
                     </select>
                   </label>
 

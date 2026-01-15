@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../auth/AuthContext";
 
+const TYPE_OPTIONS = [
+    { value: "", label: "Select type…" },
+    { value: "space", label: "Space" },
+    { value: "artifact", label: "Artifact" },
+    { value: "photography", label: "Photography" },
+];
 
 function SubmitPage() {
     const { user } = useAuth();
@@ -15,11 +21,62 @@ function SubmitPage() {
     const [errorMsg, setErrorMsg] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
 
+    const [showAuthor, setShowAuthor] = useState(false);
+    const [showLocation, setShowLocation] = useState(false);
+
+    const [author, setAuthor] = useState(null);
+    const [authorQ, setAuthorQ] = useState("");
+    const [authorSug, setAuthorSug] = useState([]);
+    const [authorOpen, setAuthorOpen] = useState(false);
+
+    const [location, setLocation] = useState(null);   // {id,name}
+    const [locQ, setLocQ] = useState("");
+    const [locSug, setLocSug] = useState([]);
+    const [locOpen, setLocOpen] = useState(false);
+
+    useEffect(() => {
+        let ignore = false;
+        async function run() {
+            if (!locQ.trim()) { setLocSug([]); return; }
+            const { data } = await supabase
+                .from("locations")
+                .select("id,name")
+                .ilike("name", `%${locQ}%`)
+                .order("name")
+                .limit(8);
+            if (!ignore) setLocSug(data ?? []);
+        }
+        run();
+        return () => { ignore = true; };
+    }, [locQ]);
+
+    useEffect(() => {
+        let ignore = false;
+        async function run() {
+            if (!authorQ.trim()) { setAuthorSug([]); return; }
+            const { data } = await supabase
+                .from("authors")
+                .select("id,name")
+                .ilike("name", `%${authorQ}%`)
+                .order("name")
+                .limit(8);
+            if (!ignore) setAuthorSug(data ?? []);
+        }
+        run();
+        return () => { ignore = true; };
+    }, [authorQ]);
+
     async function onSubmit(e) {
         e.preventDefault();
         setBusy(true);
         setErrorMsg("");
         setSuccessMsg("");
+
+        if (!user) {
+            setErrorMsg("Not logged in.");
+            setBusy(false);
+            return;
+        }
 
         const payload = {
             title: title.trim(),
@@ -28,6 +85,8 @@ function SubmitPage() {
             image_url: imageUrl.trim() || null,
             created_by: user.id,
             status: "SUBMITTED",
+            location_id: location?.id ?? null,
+            author_id: author?.id ?? null,
         };
 
         // Minimal validation
@@ -40,12 +99,6 @@ function SubmitPage() {
         const { error } = await supabase.from("archive_entries").insert(payload);
 
         setBusy(false);
-
-        if (!user) {
-            setErrorMsg("Not logged in.");
-            setBusy(false);
-            return;
-        }
 
         if (error) {
             console.error("insert error:", error);
@@ -77,7 +130,13 @@ function SubmitPage() {
 
                 <label>
                     Type
-                    <input value={type} onChange={(e) => setType(e.target.value)} type="text" placeholder="e.g. space, artifact, photography" />
+                    <select value={type} onChange={(e) => setType(e.target.value)}>
+                        {TYPE_OPTIONS.map((opt) => (
+                            <option key={opt.value} value={opt.value} disabled={opt.value === ""}>
+                                {opt.label}
+                            </option>
+                        ))}
+                    </select>
                 </label>
 
                 <label>
@@ -89,6 +148,85 @@ function SubmitPage() {
                         placeholder="https://picsum.photos/300/200"
                     />
                 </label>
+
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <button type="button" onClick={() => setShowAuthor(v => !v)}>+ Author</button>
+                    <button type="button" onClick={() => setShowLocation(v => !v)}>+ Location</button>
+                </div>
+
+                {showLocation && (
+                    <div style={{ display: "grid", gap: 6 }}>
+                        <label>Location</label>
+
+                        {location && (
+                            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                                <span style={{ padding: "4px 10px", border: "1px solid #ddd", borderRadius: 999 }}>
+                                    {location.name}
+                                </span>
+                                <button type="button" onClick={() => setLocation(null)}>×</button>
+                            </div>
+                        )}
+
+                        <input
+                            value={locQ}
+                            onChange={(e) => { setLocQ(e.target.value); setLocOpen(true); }}
+                            onFocus={() => setLocOpen(true)}
+                            placeholder="Search location…"
+                        />
+
+                        {locOpen && locSug.length > 0 && (
+                            <div style={{ border: "1px solid #ddd", borderRadius: 12, overflow: "hidden" }}>
+                                {locSug.map((it) => (
+                                    <button
+                                        key={it.id}
+                                        type="button"
+                                        onClick={() => { setLocation(it); setLocQ(""); setLocOpen(false); }}
+                                        style={{ display: "block", width: "100%", textAlign: "left", padding: 10, border: "none", background: "white" }}
+                                    >
+                                        {it.name}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {showAuthor && (
+                    <div style={{ display: "grid", gap: 6 }}>
+                        <label>Author</label>
+
+                        {author && (
+                            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                                <span style={{ padding: "4px 10px", border: "1px solid #ddd", borderRadius: 999 }}>
+                                    {author.name}
+                                </span>
+                                <button type="button" onClick={() => setAuthor(null)}>×</button>
+                            </div>
+                        )}
+
+                        <input
+                            value={locQ}
+                            onChange={(e) => { setAuthorQ(e.target.value); setAuthorOpen(true); }}
+                            onFocus={() => setAuthorOpen(true)}
+                            placeholder="Search author…"
+                        />
+
+                        {authorOpen && authorSug.length > 0 && (
+                            <div style={{ border: "1px solid #ddd", borderRadius: 12, overflow: "hidden" }}>
+                                {authorSug.map((it) => (
+                                    <button
+                                        key={it.id}
+                                        type="button"
+                                        onClick={() => { setAuthor(it); setAuthorQ(""); setAuthorOpen(false); }}
+                                        style={{ display: "block", width: "100%", textAlign: "left", padding: 10, border: "none", background: "white" }}
+                                    >
+                                        {it.name}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {errorMsg && <p style={{ color: "crimson" }}>{errorMsg}</p>}
                 {successMsg && <p style={{ color: "green" }}>{successMsg}</p>}
