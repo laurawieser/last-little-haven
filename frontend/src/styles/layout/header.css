@@ -45,8 +45,25 @@ nav a[aria-current="page"] {
     background: color-mix(in srgb, var(--brand-red), transparent 90%);
 }
 
-/* Logout button in nav */
 nav button {
     margin-left: 6px;
-    /* ersetzt dein inline style */
+}
+
+nav.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav.main-nav .nav-left,
+nav.main-nav .nav-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+nav.main-nav .nav-account {
+  border-color: var(--brand-red);
+  background: color-mix(in srgb, var(--brand-red), transparent 88%);
 }

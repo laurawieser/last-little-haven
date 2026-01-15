@@ -1,0 +1,87 @@
+.container-submissions {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.submissions-error {
+  color: crimson;
+}
+
+.submissions-list {
+  display: grid;
+  gap: 12px;
+}
+
+.submission-card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.35);
+  display: grid;
+  gap: 12px;
+}
+
+.submission-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.submission-head-left {
+  display: grid;
+  gap: 6px;
+}
+
+.submission-head-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.submission-title {
+  font-weight: 700;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  line-height: 1.25;
+}
+
+.submission-status {
+  opacity: 0.6;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  margin-left: 4px;
+}
+
+.submission-type {
+  opacity: 0.75;
+  line-height: 1.25;
+}
+
+.submission-body {
+  opacity: 0.9;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+.submission-edit {
+  display: grid;
+  gap: 10px;
+  max-width: 720px;
+}
+
+.submission-field {
+  display: grid;
+  gap: 6px;
+}
+
+.submission-actions {
+  display: flex;
+  gap: 8px;
+}

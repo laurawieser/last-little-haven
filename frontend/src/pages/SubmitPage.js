@@ -4,9 +4,9 @@ import { useAuth } from "../auth/AuthContext";
 
 const TYPE_OPTIONS = [
     { value: "", label: "Select type…" },
-    { value: "space", label: "Space" },
-    { value: "artifact", label: "Artifact" },
-    { value: "photography", label: "Photography" },
+    { value: "Space", label: "Space" },
+    { value: "Artifact", label: "Artifact" },
+    { value: "Photography", label: "Photography" },
 ];
 
 function SubmitPage() {

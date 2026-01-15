@@ -1,0 +1,40 @@
+.container-favorites {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.favorites-error {
+  color: crimson;
+}
+
+.favorites-list {
+  display: grid;
+  gap: 12px;
+}
+
+.favorites-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.favorites-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.favorites-title {
+  font-weight: 600;
+}
+
+.favorites-type {
+  opacity: 0.75;
+}

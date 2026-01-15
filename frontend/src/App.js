@@ -1,8 +1,9 @@
-import { 
-  BrowserRouter, 
-  Routes, 
-  Route, 
-  NavLink 
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  NavLink,
+  Navigate
 } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ArchivePage from './pages/ArchivePage';
@@ -11,6 +12,9 @@ import SubmitPage from './pages/SubmitPage';
 import AdminPage from './pages/AdminPage';
 import LoginPage from "./pages/LoginPage";
 import DetailPage from './pages/DetailPage';
+import AccountPage from "./pages/AccountPage";
+import MySubmissionsPage from "./pages/MySubmissionsPage";
+import FavoritesPage from "./pages/FavoritesPage";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { useAuth } from "./auth/AuthContext";
@@ -18,29 +22,37 @@ import { useAuth } from "./auth/AuthContext";
 
 
 function App() {
-  
+
   const { user, role, signOut } = useAuth();
 
   return (
     <main className="app">
       <header>
         <h1>Last Little Haven</h1>
-        <nav>
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/archive">Archive</NavLink>
-          <NavLink to="/map">Map</NavLink>
+        <nav className="main-nav">
+          <div className="nav-left">
+            <NavLink to="/">Home</NavLink>
+            <NavLink to="/archive">Archive</NavLink>
+            <NavLink to="/map">Map</NavLink>
 
-          {user && <NavLink to="/submit">Submit</NavLink>}
-          {user && role === "ADMIN" && <NavLink to="/admin">Admin</NavLink>}
+            {user && <NavLink to="/submit">Submit</NavLink>}
+            {user && role === "ADMIN" && <NavLink to="/admin">Admin</NavLink>}
+          </div>
 
-          {!user ? (
-            <NavLink to="/login">Login</NavLink>
-          ) : (
-            <button type="button" onClick={() => signOut()} style={{ marginLeft: 8 }}>
-              Logout
-            </button>
-          )}
+          <div className="nav-right">
+            {!user ? (
+              <NavLink to="/login">Login</NavLink>
+            ) : (
+              <>
+                <NavLink to="/account" className="nav-account">Account</NavLink>
+                <button type="button" onClick={() => signOut()} className="nav-logout">
+                  Logout
+                </button>
+              </>
+            )}
+          </div>
         </nav>
+
       </header>
 
       <section>
@@ -70,6 +82,20 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <AccountPage />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="favorites" replace />} />
+            <Route path="favorites" element={<FavoritesPage />} />
+            <Route path="submissions" element={<MySubmissionsPage />} />
+          </Route>
+
         </Routes>
       </section>
 
