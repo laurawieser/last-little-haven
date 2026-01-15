@@ -3,7 +3,7 @@ import {
   Routes,
   Route,
   NavLink,
-  Navigate
+  Navigate,
 } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ArchivePage from './pages/ArchivePage';
@@ -15,6 +15,8 @@ import DetailPage from './pages/DetailPage';
 import AccountPage from "./pages/AccountPage";
 import MySubmissionsPage from "./pages/MySubmissionsPage";
 import FavoritesPage from "./pages/FavoritesPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { useAuth } from "./auth/AuthContext";
@@ -62,6 +64,9 @@ function App() {
           <Route path="/map" element={<MapPage />} />
 
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
 
           <Route path="/archive/:id" element={<DetailPage />} />
 

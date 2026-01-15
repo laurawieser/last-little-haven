@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../auth/AuthContext";
 
@@ -57,7 +57,7 @@ function LoginPage() {
 
         // Wenn Email confirmation an ist, ist session oft null und user muss Mail klicken
         if (!data?.session) {
-            setInfoMsg("Fast fertig: Bitte bestätige deine E-Mail (Link wurde gesendet).");
+            setInfoMsg("Almost done: Please check your emails to verify your account.");
             return;
         }
 
@@ -68,7 +68,7 @@ function LoginPage() {
     return (
         <main className="container-login">
 
-            <h1>{mode === "login" ? "Login" : "Registrieren"}</h1>
+            <h1>{mode === "login" ? "Login" : "Register"}</h1>
 
             <form onSubmit={onSubmit} style={{ display: "grid", gap: 12, maxWidth: 420 }}>
                 <label>
@@ -97,9 +97,11 @@ function LoginPage() {
                 {infoMsg && <p style={{ color: "green" }}>{infoMsg}</p>}
 
                 <button type="submit" disabled={busy}>
-                    {busy ? "…" : mode === "login" ? "Einloggen" : "Account erstellen"}
+                    {busy ? "…" : mode === "login" ? "Login" : "Create Account"}
                 </button>
             </form>
+
+            <Link to="/forgot-password">Forgot password?</Link>
 
             <p style={{ marginTop: 12 }}>
                 {mode === "login" ? (
