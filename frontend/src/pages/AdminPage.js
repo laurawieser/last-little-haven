@@ -7,10 +7,8 @@ function AdminPage() {
   const [busyId, setBusyId] = useState(null);
   const [error, setError] = useState("");
 
-  async function loadPending() {
-    setLoading(true);
-    setError("");
 
+  async function loadPending() {
     const { data, error } = await supabase
       .from("archive_entries")
       .select("id,title,type,created_at,created_by,status")
@@ -28,8 +26,42 @@ function AdminPage() {
     setLoading(false);
   }
 
+  async function checkAdminAndLoad() {
+    setLoading(true);
+    setError("");
+
+    // 1) Get logged-in user
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    const userId = authData?.user?.id;
+
+    if (authError || !userId) {
+      setError("Please log in as admin.");
+      setPending([]);
+      setLoading(false);
+      return;
+    }
+
+    // 2) Check role in "profiles" table
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", userId)
+      .single();
+
+    if (profileError || profile?.role !== "ADMIN") {
+      setError("No admin access.");
+      setPending([]);
+      setLoading(false);
+      return;
+    }
+
+    // 3) Admin ok → load submissions
+    await loadPending();
+    setLoading(false);
+  }
+
   useEffect(() => {
-    loadPending();
+    checkAdminAndLoad();
   }, []);
 
   async function setStatus(entryId, status) {

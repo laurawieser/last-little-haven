@@ -191,7 +191,7 @@ function ArchivePage() {
           <label>
             Type
             <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-              <option value="">Alle</option>
+              <option value="">All</option>
               {typeOptions.map((t) => (
                 <option key={t} value={t}>
                   {t}
@@ -203,7 +203,7 @@ function ArchivePage() {
           <label>
             City
             <select value={cityFilter} onChange={(e) => setCityFilter(e.target.value)}>
-              <option value="">Alle</option>
+              <option value="">All</option>
               {cityOptions.map((c) => (
                 <option key={c} value={c}>
                   {c}
@@ -215,7 +215,7 @@ function ArchivePage() {
           <label>
             Space / Location
             <select value={placeFilter} onChange={(e) => setPlaceFilter(e.target.value)}>
-              <option value="">Alle</option>
+              <option value="">All</option>
               {placeOptions.map((p) => (
                 <option key={p} value={p}>
                   {p}

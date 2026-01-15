@@ -31,7 +31,7 @@ function App() {
           <NavLink to="/map">Map</NavLink>
 
           {user && <NavLink to="/submit">Einreichen</NavLink>}
-          {user && role === "admin" && <NavLink to="/admin">Admin</NavLink>}
+          {user && role === "ADMIN" && <NavLink to="/admin">Admin</NavLink>}
 
           {!user ? (
             <NavLink to="/login">Login</NavLink>
@@ -65,7 +65,7 @@ function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute requireRole="admin">
+              <ProtectedRoute requireRole="ADMIN">
                 <AdminPage />
               </ProtectedRoute>
             }

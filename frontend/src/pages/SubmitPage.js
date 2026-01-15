@@ -27,12 +27,13 @@ function SubmitPage() {
             type: type.trim(),
             image_url: imageUrl.trim() || null,
             created_by: user.id,
+            status: "SUBMITTED",
         };
 
         // Minimal validation
         if (!payload.title || !payload.description || !payload.type) {
             setBusy(false);
-            setErrorMsg("Bitte Titel, Beschreibung und Typ ausfüllen.");
+            setErrorMsg("Please fill out title, description and type");
             return;
         }
 
@@ -41,7 +42,7 @@ function SubmitPage() {
         setBusy(false);
 
         if (!user) {
-            setErrorMsg("Nicht eingeloggt.");
+            setErrorMsg("Not logged in.");
             setBusy(false);
             return;
         }
@@ -52,7 +53,7 @@ function SubmitPage() {
             return;
         }
 
-        setSuccessMsg("Danke! Eintrag wurde gespeichert.");
+        setSuccessMsg("Thank you! Your submission has been saved.");
         setTitle("");
         setDescription("");
         setType("");
@@ -61,7 +62,7 @@ function SubmitPage() {
 
     return (
         <main className="container submit">
-            <h1>Neuen Ort einreichen</h1>
+            <h1>Submit new entry</h1>
 
             <form onSubmit={onSubmit} style={{ display: "grid", gap: 12, maxWidth: 520 }}>
                 <label>
@@ -76,7 +77,7 @@ function SubmitPage() {
 
                 <label>
                     Type
-                    <input value={type} onChange={(e) => setType(e.target.value)} type="text" placeholder="z.B. Ort, Artefakt, Fotografie" />
+                    <input value={type} onChange={(e) => setType(e.target.value)} type="text" placeholder="e.g. space, artifact, photography" />
                 </label>
 
                 <label>
@@ -93,7 +94,7 @@ function SubmitPage() {
                 {successMsg && <p style={{ color: "green" }}>{successMsg}</p>}
 
                 <button type="submit" disabled={busy}>
-                    {busy ? "…" : "Absenden"}
+                    {busy ? "…" : "Submit"}
                 </button>
             </form>
         </main>

@@ -129,7 +129,7 @@ function DetailPage() {
             </button>
 
              {/* ✅ Only visible for admins */}
-            {role === "admin" && (
+            {role === "ADMIN" && (
               <button
                 className="btn-delete"
                 onClick={handleDelete}

@@ -108,7 +108,7 @@ function MapPage() {
         }
       } catch (err) {
         console.error(err);
-        setError("Karte konnte nicht geladen werden.");
+        setError("Map could not be loaded.");
       } finally {
         setLoading(false);
       }
