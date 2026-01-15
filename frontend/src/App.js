@@ -30,7 +30,7 @@ function App() {
           <NavLink to="/archive">Archive</NavLink>
           <NavLink to="/map">Map</NavLink>
 
-          {user && <NavLink to="/submit">Einreichen</NavLink>}
+          {user && <NavLink to="/submit">Submit</NavLink>}
           {user && role === "ADMIN" && <NavLink to="/admin">Admin</NavLink>}
 
           {!user ? (

@@ -7,11 +7,20 @@ function AdminPage() {
   const [busyId, setBusyId] = useState(null);
   const [error, setError] = useState("");
 
+  const [editingId, setEditingId] = useState(null);
+  const [draft, setDraft] = useState({
+    title: "",
+    description: "",
+    type: "",
+    image_url: "",
+    status: "SUBMITTED",
+  });
+
 
   async function loadPending() {
     const { data, error } = await supabase
       .from("archive_entries")
-      .select("id,title,type,created_at,created_by,status")
+      .select("id,title,description,type,image_url,created_at,created_by,status,image_url")
       .eq("status", "SUBMITTED")
       .order("created_at", { ascending: false });
 
@@ -103,6 +112,59 @@ function AdminPage() {
     setBusyId(null);
   }
 
+  function startEdit(entry) {
+    setEditingId(entry.id);
+    setDraft({
+      title: entry.title ?? "",
+      description: entry.description ?? "",
+      type: entry.type ?? "",
+      image_url: entry.image_url ?? "",
+      status: entry.status ?? "SUBMITTED",
+    });
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+  }
+
+  async function saveEdit(entryId) {
+    setBusyId(entryId);
+    setError("");
+
+    const payload = {
+      title: draft.title.trim(),
+      description: draft.description.trim(),
+      type: draft.type.trim(),
+      image_url: draft.image_url.trim() || null,
+      status: draft.status,
+    };
+
+    const { error } = await supabase
+      .from("archive_entries")
+      .update(payload)
+      .eq("id", entryId);
+
+    if (error) {
+      console.error("saveEdit error:", error);
+      setError(error.message);
+      setBusyId(null);
+      return;
+    }
+
+    // UI aktualisieren (ohne neu laden)
+    if (payload.status !== "SUBMITTED") {
+      setPending((prev) => prev.filter((x) => x.id !== entryId));
+    } else {
+      setPending((prev) =>
+        prev.map((x) => (x.id === entryId ? { ...x, ...payload } : x))
+      );
+    }
+
+    setEditingId(null);
+    setBusyId(null);
+  }
+
+
   return (
     <main className="container-admin">
       <h1>Moderation</h1>
@@ -117,6 +179,25 @@ function AdminPage() {
         <section style={{ display: "grid", gap: 12 }}>
           {pending.map((e) => (
             <div key={e.id} className="card" style={{ display: "grid", gap: 8 }}>
+              {/* Thumbnail */}
+              {e.image_url ? (
+                <img
+                  src={e.image_url}
+                  alt={e.title || "Submission image"}
+                  style={{
+                    width: "100%",
+                    maxHeight: 220,
+                    objectFit: "cover",
+                    borderRadius: 12,
+                  }}
+                  loading="lazy"
+                  onError={(ev) => {
+                    ev.currentTarget.style.display = "none";
+                  }}
+                />
+              ) : null}
+
+
               <div>
                 <strong>{e.title}</strong>
                 <div style={{ opacity: 0.8 }}>{e.type}</div>
@@ -142,11 +223,86 @@ function AdminPage() {
 
                 <button
                   disabled={busyId === e.id}
+                  onClick={() => startEdit(e)}
+                >
+                  ✏️ Edit
+                </button>
+
+                <button
+                  disabled={busyId === e.id}
                   onClick={() => deleteEntry(e.id)}
                 >
                   🗑 Delete
                 </button>
               </div>
+              {editingId === e.id && (
+                <div className="card" style={{ padding: 12, display: "grid", gap: 8 }}>
+                  <label>
+                    Title
+                    <input
+                      value={draft.title}
+                      onChange={(ev) => setDraft((d) => ({ ...d, title: ev.target.value }))}
+                    />
+                  </label>
+
+                  <label>
+                    Description
+                    <textarea
+                      value={draft.description}
+                      onChange={(ev) =>
+                        setDraft((d) => ({ ...d, description: ev.target.value }))
+                      }
+                      rows={4}
+                    />
+                  </label>
+
+                  <label>
+                    Type
+                    <input
+                      value={draft.type}
+                      onChange={(ev) => setDraft((d) => ({ ...d, type: ev.target.value }))}
+                    />
+                  </label>
+
+                  <label>
+                    Image URL
+                    <input
+                      value={draft.image_url}
+                      onChange={(ev) =>
+                        setDraft((d) => ({ ...d, image_url: ev.target.value }))
+                      }
+                    />
+                  </label>
+
+                  <label>
+                    Status
+                    <select
+                      value={draft.status}
+                      onChange={(ev) =>
+                        setDraft((d) => ({ ...d, status: ev.target.value }))
+                      }
+                    >
+                      <option value="SUBMITTED">SUBMITTED</option>
+                      <option value="APPROVED">APPROVED</option>
+                      <option value="DECLINED">DECLINED</option>
+                    </select>
+                  </label>
+
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <button
+                      disabled={busyId === e.id}
+                      onClick={() => saveEdit(e.id)}
+                    >
+                      💾 Save
+                    </button>
+
+                    <button disabled={busyId === e.id} onClick={cancelEdit}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+
             </div>
           ))}
         </section>
