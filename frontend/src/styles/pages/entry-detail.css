@@ -7,15 +7,17 @@
 
 .image-wrapper {
   position: relative;
-  cursor: zoom-in;
+  display: flex; 
+  justify-content: flex-start;
 }
 
 .detail-image {
-  width: 100%;
+  cursor: zoom-in;
   height: 480px;
   object-fit: contain;
   border-radius: 16px;
   box-shadow: var(--shadow);
+  width: auto;
 }
 
 .image-overlay-tab {
