@@ -5,7 +5,7 @@ function HomePage() {
     <main className="container-home">
       {/* Hero */}
       <section className="hero-home">
-        <img src="/logo.png" alt="Last Little Haven Logo" className="logo-home" />
+        <img src="../llh_logo.jpg" alt="Last Little Haven Logo" className="logo-home" />
         <h1>Last Little Haven</h1>
         <p>
           A sapphic art bar and digital archive in Vienna, reimagining a (fictional) lesbian/queer bar from the 1930s-1950s and turning memory into a place you can enter.

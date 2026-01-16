@@ -4,14 +4,12 @@ footer {
   border-top: 1px solid var(--border);
   padding: 18px 0;
   color: var(--muted);
-  background: var(--surface);
+  background: var(--bg);
   
   /* FULL WIDTH */
-  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
   width: 100%;  
 }
 
