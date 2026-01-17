@@ -102,7 +102,6 @@ function DetailPage() {
       alert("Please login, to save to favorites.");
       return;
     }
-
     setFavBusy(true);
 
     if (isFavorite) {
@@ -126,6 +125,32 @@ function DetailPage() {
     if (error) return alert(error.message);
     setIsFavorite(true);
   }
+
+  async function handleShare() {
+  const url = `${window.location.origin}/archive/${id}`;
+  const text = entry?.title
+    ? `Check out this archive entry: ${entry.title}`
+    : "Check out this archive entry";
+
+  // Native share (mobile browsers)
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: entry?.title || "Last Little Haven",
+        text,
+        url,
+      });
+      return;
+    } catch (e) {
+      // User cancelled sharing → ignore
+    }
+  }
+
+  // Fallback: WhatsApp share
+  const wa = `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`;
+  window.open(wa, "_blank", "noopener,noreferrer");
+}
+
 
   if (loading) return <div className="loading">Lade Eintrag…</div>;
   if (error) return <div className="error">{error}</div>;
@@ -210,7 +235,11 @@ function DetailPage() {
             {isFavorite ? "★ Saved" : "☆ Save"}
           </button>
         )}
+          <button onClick={handleShare}>
+          Share
+          </button>
       </div>
+      
 
       {showImage && (
         <div className="image-modal" onClick={() => setShowImage(false)}>

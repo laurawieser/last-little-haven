@@ -36,8 +36,7 @@ function App() {
             <NavLink to="/">Home</NavLink>
             <NavLink to="/archive">Archive</NavLink>
             <NavLink to="/map">Map</NavLink>
-
-            {user && <NavLink to="/submit">Submit</NavLink>}
+            <NavLink to="/submit">Submit</NavLink>
             {user && role === "ADMIN" && <NavLink to="/admin">Admin</NavLink>}
           </div>
 
@@ -71,13 +70,7 @@ function App() {
           <Route path="/archive/:id" element={<DetailPage />} />
 
           <Route
-            path="/submit"
-            element={
-              <ProtectedRoute>
-                <SubmitPage />
-              </ProtectedRoute>
-            }
-          />
+            path="/submit" element={<SubmitPage />} />
 
           <Route
             path="/admin"

@@ -15,7 +15,9 @@ export async function uploadToStorage(bucket, file) {
   return { publicUrl: data.publicUrl, path };
 }
 
-export async function insertMediaRow({ file, fileUrl, credits }) {
+export async function insertMediaRow({ file, fileUrl, credits, archiveEntryId }) {
+  if (!archiveEntryId) throw new Error("Missing archiveEntryId for media.");
+
   const { data, error } = await supabase
     .from("media_files")
     .insert({
@@ -24,6 +26,7 @@ export async function insertMediaRow({ file, fileUrl, credits }) {
       file_url: fileUrl,
       file_size_mb: roundMb(file.size),
       credits: credits?.trim() || null,
+      archive_entry_id: archiveEntryId, // ✅ link to entry
     })
     .select("id")
     .single();
