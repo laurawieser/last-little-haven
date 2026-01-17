@@ -2,18 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
 import "../styles/pages/entry-detail.css";
 import { useAuth } from "../auth/AuthContext";
+import LeafletMap from "../components/LeafletMap";
+import { Marker, Popup } from "react-leaflet";
 
-// Leaflet Icon Fix
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
 
 function parseKeywords(input) {
   if (!input) return [];
@@ -164,7 +157,11 @@ function DetailPage() {
   return (
     <main className="detail-container">
       <div className="image-wrapper" onClick={() => setShowImage(true)}>
-        <img src={entry.image_url || "https://placehold.co/600x400/2B2E30/C4C7C8?text=LLH"} alt={entry.title || entry.type} className="detail-image" />
+        <img 
+          src={entry.image_url || "https://placehold.co/600x400/2B2E30/C4C7C8?text=LLH"} 
+          alt={entry.title || entry.type} 
+          className="detail-image" 
+        />
         <div className="image-overlay-tab">
           {hasTitle && <h1>{entry.title}</h1>}
           <p className="type">{displayType}</p>
@@ -183,16 +180,24 @@ function DetailPage() {
             {entry.originDate && <p><strong>Origin Date:</strong> {entry.originDate}</p>}
             {entry.author_name && <p><strong>Author:</strong> {entry.author_name}</p>}
 
-            {/* ← LOCATION ROW */}
+            {/* ← LOCATION ROW - LeafletMap! */}
             {location && (
               <div className="location-row">
                 <div className="location-map-small">
-                  <MapContainer center={[parseFloat(location.latitude), parseFloat(location.longitude)]} zoom={15} style={{ height: "100%", width: "100%", borderRadius: "12px" }}>
-                    <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" attribution="© OpenStreetMap" />
-                    <Marker position={[parseFloat(location.latitude), parseFloat(location.longitude)]}>
-                      <Popup>{location.name}<br />{location.address}</Popup>
+                  <LeafletMap
+                    center={[parseFloat(location.latitude), parseFloat(location.longitude)]}
+                    zoom={15}
+                    height="100%"
+                  >
+                    <Marker
+                      position={[parseFloat(location.latitude), parseFloat(location.longitude)]}
+                    >
+                      <Popup>
+                        {location.name}<br />
+                        {location.address}
+                      </Popup>
                     </Marker>
-                  </MapContainer>
+                  </LeafletMap>
                 </div>
                 <div className="location-info-right">
                   <p><strong>{location.name}</strong></p>
@@ -235,11 +240,8 @@ function DetailPage() {
             {isFavorite ? "★ Saved" : "☆ Save"}
           </button>
         )}
-          <button onClick={handleShare}>
-          Share
-          </button>
+        <button onClick={handleShare}>Share</button>
       </div>
-      
 
       {showImage && (
         <div className="image-modal" onClick={() => setShowImage(false)}>
@@ -248,6 +250,7 @@ function DetailPage() {
       )}
     </main>
   );
+
 }
 
 export default DetailPage;

@@ -2,22 +2,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import LeafletMap from "../components/LeafletMap";  
+import { Marker, Popup, TileLayer } from "react-leaflet";     
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import "../styles/pages/map.css"; // optional
 
-// Leaflet Icon Fix (same as DetailPage)
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
 
 const DEFAULT_CENTER = [48.2082, 16.3738]; // Vienna fallback
 const DEFAULT_ZOOM = 12;
@@ -154,22 +142,22 @@ function MapPage() {
       {loading && <div className="loading">Laden...</div>}
       {error && <div className="error">{error}</div>}
 
-      {!loading && !error && (
-        <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-          <MapContainer
-            center={center}
-            zoom={zoom}
-            style={{ height: "70vh", width: "100%" }}
-            scrollWheelZoom={true}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution="&copy; OpenStreetMap"
-            />
-            {markers}
-          </MapContainer>
-        </div>
-      )}
+        {!loading && !error && (
+          <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+            <LeafletMap
+              center={center}
+              zoom={zoom}
+              height="70vh"
+              width="100%"
+            >
+              <TileLayer
+                url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+                attribution=""
+              />
+              {markers}
+            </LeafletMap>
+          </div>
+        )}
 
       {!loading && !error && items.length === 0 && (
         <p style={{ marginTop: 12 }}>
