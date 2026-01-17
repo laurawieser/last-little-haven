@@ -169,7 +169,7 @@ export default function MapPage() {
               <strong>{space.archive_entries.title}</strong> ({idx + 1}/{tourSpaces.length})
               <button
                 style={{ marginTop: 8, width: "100%" }}
-                onClick={() => navigate(`/detail/${space.archive_entries.id}`)}
+                onClick={() => navigate(`/archive/${space.archive_entries.id}`)}
               >
                 Open Details
               </button>
