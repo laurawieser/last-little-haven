@@ -1,6 +1,6 @@
-// src/components/LeafletMap.jsx
+// src/components/LeafletMap.jsximport React, { useState, useRef, useEffect } from "react";
 import React, { useState, useRef, useEffect } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "../styles/components/leaflet-map.css"; 
 import "leaflet/dist/leaflet.css";
@@ -16,6 +16,19 @@ L.Icon.Default.mergeOptions({
   shadowUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
 });
+
+// Hilfskomponente, um Karte auf neue Position zu zentrieren
+function MapUpdater({ center, zoom }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (center && zoom) {
+      map.flyTo(center, zoom);
+    }
+  }, [center, zoom, map]);
+
+  return null;
+}
 
 export default function LeafletMap({
   center = [48.2082, 16.3738],
@@ -55,6 +68,7 @@ export default function LeafletMap({
       >
         <TileLayer url={tileUrl} attribution="" />
         {children}
+        <MapUpdater center={center} zoom={zoom} />
       </MapContainer>
 
       {/* Info-Icon 🛈 */}
