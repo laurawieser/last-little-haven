@@ -16,7 +16,7 @@ export default function MediaSection({
                 File
                 <input
                     type="file"
-                    accept="image/*,video/*,audio/*,application/pdf"
+                    accept="image/jpeg,image/png,image/webp"
                     onChange={(e) => setMediaFile(e.target.files?.[0] ?? null)}
                 />
             </label>

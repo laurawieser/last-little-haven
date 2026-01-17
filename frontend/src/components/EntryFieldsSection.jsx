@@ -53,17 +53,16 @@ export default function EntryFieldsSection({ form, setForm }) {
                 Origin date
                 <input
                     type="date"
-                    value={form.originDate}
-                    onChange={(e) => set("originDate", e.target.value)}
+                    value={form.origin_date}
+                    onChange={(e) => set("origin_date", e.target.value)}
                 />
             </label>
 
             <label>
                 External links (comma separated)
                 <input
-                    value={form.externalLinksRaw}
-                    onChange={(e) => set("externalLinksRaw", e.target.value)}
-                    placeholder="https://…, https://…"
+                    value={form.external_links_raw}
+                    onChange={(e) => set("external_links_raw", e.target.value)}
                 />
             </label>
 

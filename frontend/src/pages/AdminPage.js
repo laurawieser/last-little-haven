@@ -1,26 +1,61 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
+import { useLookup } from "../hooks/useLookup";
+import { roundMb } from "../lib/media";
+import { updateArchiveEntry } from "../lib/archiveEntries";
+
+import EntryFieldsSection from "../components/EntryFieldsSection";
+import LocationSection from "../components/LocationSection";
+import AuthorSection from "../components/AuthorSection";
+import MediaSection from "../components/MediaSection";
+
+
 function AdminPage() {
+  const INITIAL_FORM = {
+    title: "",
+    description: "",
+    type: "",
+    imageUrl: "",
+    keywordsRaw: "",
+    origin_date: "",
+    external_links_raw: "",
+    status: "SUBMITTED",
+    media_files: null,
+  };
+
+  const [form, setForm] = useState(INITIAL_FORM);
+
+  const [showAuthor, setShowAuthor] = useState(false);
+  const [showLocation, setShowLocation] = useState(false);
+  const [showMedia, setShowMedia] = useState(false);
+
+  const [author, setAuthor] = useState(null);
+  const [newAuthor, setNewAuthor] = useState({ name: "", bio: "", birth_date: "", death_date: "" });
+  const authorLookup = useLookup({ table: "authors", select: "id,name" });
+
+  const [location, setLocation] = useState(null);
+  const [newLocation, setNewLocation] = useState({ name: "", city: "", address: "" });
+  const locLookup = useLookup({ table: "locations", select: "id,name,city,address" });
+
+  const [mediaFile, setMediaFile] = useState(null);
+  const [mediaCredits, setMediaCredits] = useState("");
+
   const [pending, setPending] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
   const [error, setError] = useState("");
 
   const [editingId, setEditingId] = useState(null);
-  const [draft, setDraft] = useState({
-    title: "",
-    description: "",
-    type: "",
-    image_url: "",
-    status: "SUBMITTED",
-  });
-
 
   async function loadPending() {
     const { data, error } = await supabase
       .from("archive_entries")
-      .select("id,title,description,type,image_url,created_at,created_by,status,image_url")
+      .select(`
+        id,title,description,type,created_at,created_by,status,
+        keywords,origin_date,external_links,author_id,location_id,
+        media_files ( id, file_url, role, credits )
+      `)
       .eq("status", "SUBMITTED")
       .order("created_at", { ascending: false });
 
@@ -112,15 +147,58 @@ function AdminPage() {
     setBusyId(null);
   }
 
-  function startEdit(entry) {
+  async function startEdit(entry) {
     setEditingId(entry.id);
-    setDraft({
+
+    setForm({
       title: entry.title ?? "",
       description: entry.description ?? "",
       type: entry.type ?? "",
-      image_url: entry.image_url ?? "",
+      imageUrl: "",
+      keywordsRaw: Array.isArray(entry.keywords) ? entry.keywords.join(", ") : "",
+      origin_date: entry.origin_date ?? "",
+      external_links_raw: Array.isArray(entry.external_links) ? entry.external_links.join(", ") : "",
       status: entry.status ?? "SUBMITTED",
+      media_files: entry.media_files ?? null,
     });
+
+    // Prefill author chip
+    if (entry.author_id) {
+      const { data } = await supabase
+        .from("authors")
+        .select("id,name")
+        .eq("id", entry.author_id)
+        .single();
+      if (data) {
+        setAuthor(data);
+        setShowAuthor(true); // optional: automatisch aufklappen
+      }
+    } else {
+      setAuthor(null);
+      setNewAuthor({ name: "", bio: "", birth_date: "", death_date: "" });
+      setShowAuthor(false);
+    }
+
+    // Prefill location chip
+    if (entry.location_id) {
+      const { data } = await supabase
+        .from("locations")
+        .select("id,name,city,address")
+        .eq("id", entry.location_id)
+        .single();
+      if (data) {
+        setLocation(data);
+        setShowLocation(true); // optional
+      }
+    } else {
+      setLocation(null);
+      setNewLocation({ name: "", city: "", address: "" });
+      setShowLocation(false);
+    }
+
+    setMediaFile(null);
+    setMediaCredits("");
+    setShowMedia(false);
   }
 
   function cancelEdit() {
@@ -131,39 +209,32 @@ function AdminPage() {
     setBusyId(entryId);
     setError("");
 
-    const payload = {
-      title: draft.title.trim(),
-      description: draft.description.trim(),
-      type: draft.type.trim(),
-      image_url: draft.image_url.trim() || null,
-      status: draft.status,
-    };
+    try {
+      const updated = await updateArchiveEntry({
+        entryId,
+        form,
+        authorState: { show: showAuthor, author, newAuthor },
+        locationState: { show: showLocation, location, newLocation },
+        mediaState: { show: showMedia, file: mediaFile, credits: mediaCredits },
+      });
 
-    const { error } = await supabase
-      .from("archive_entries")
-      .update(payload)
-      .eq("id", entryId);
+      // UI updaten
+      if (updated.status !== "SUBMITTED") {
+        setPending((prev) => prev.filter((x) => x.id !== entryId));
+      } else {
+        setPending((prev) =>
+          prev.map((x) => (x.id === entryId ? { ...x, ...updated } : x))
+        );
+      }
 
-    if (error) {
-      console.error("saveEdit error:", error);
-      setError(error.message);
+      setEditingId(null);
+    } catch (err) {
+      console.error(err);
+      setError(err?.message || "Save failed.");
+    } finally {
       setBusyId(null);
-      return;
     }
-
-    // UI aktualisieren (ohne neu laden)
-    if (payload.status !== "SUBMITTED") {
-      setPending((prev) => prev.filter((x) => x.id !== entryId));
-    } else {
-      setPending((prev) =>
-        prev.map((x) => (x.id === entryId ? { ...x, ...payload } : x))
-      );
-    }
-
-    setEditingId(null);
-    setBusyId(null);
   }
-
 
   return (
     <main className="container-admin">
@@ -177,140 +248,139 @@ function AdminPage() {
         <p>No open submissions.</p>
       ) : (
         <section style={{ display: "grid", gap: 12 }}>
-          {pending.map((e) => (
-            <div key={e.id} className="card" style={{ display: "grid", gap: 8 }}>
-              {/* Thumbnail */}
-              {e.image_url ? (
-                <img
-                  src={e.image_url}
-                  alt={e.title || "Submission image"}
-                  style={{
-                    width: "100%",
-                    maxHeight: 220,
-                    objectFit: "cover",
-                    borderRadius: 12,
-                  }}
-                  loading="lazy"
-                  onError={(ev) => {
-                    ev.currentTarget.style.display = "none";
-                  }}
-                />
-              ) : null}
+          {pending.map((e) => {
+            const cover = (e.media_files || []).find((m) => m.role === "COVER");
+            const coverUrl = cover?.file_url || null;
+
+            return (
+              <div key={e.id} className="card" style={{ display: "grid", gap: 8 }}>
+
+                {/* Thumbnail */}
+                {coverUrl ? (
+                  <img
+                    src={coverUrl}
+                    alt={e.title || "Submission image"}
+                    style={{
+                      width: "100%",
+                      maxHeight: 220,
+                      objectFit: "cover",
+                      borderRadius: 12,
+                    }}
+                    loading="lazy"
+                    onError={(ev) => {
+                      ev.currentTarget.style.display = "none";
+                    }}
+                  />
+                ) : null}
 
 
-              <div>
-                <strong>{e.title}</strong>
-                <div style={{ opacity: 0.8 }}>{e.type}</div>
-                <div style={{ opacity: 0.6, fontSize: 12 }}>
-                  {e.created_at ? new Date(e.created_at).toLocaleString() : ""}
-                </div>
-              </div>
-
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <button
-                  disabled={busyId === e.id}
-                  onClick={() => setStatus(e.id, "APPROVED")}
-                >
-                  ✅ Approve
-                </button>
-
-                <button
-                  disabled={busyId === e.id}
-                  onClick={() => setStatus(e.id, "DECLINED")}
-                >
-                  ❌ Decline
-                </button>
-
-                <button
-                  disabled={busyId === e.id}
-                  onClick={() => startEdit(e)}
-                >
-                  ✏️ Edit
-                </button>
-
-                <button
-                  disabled={busyId === e.id}
-                  onClick={() => deleteEntry(e.id)}
-                >
-                  🗑 Delete
-                </button>
-              </div>
-              {editingId === e.id && (
-                <div className="card" style={{ padding: 12, display: "grid", gap: 8 }}>
-                  <label>
-                    Title
-                    <input
-                      value={draft.title}
-                      onChange={(ev) => setDraft((d) => ({ ...d, title: ev.target.value }))}
-                    />
-                  </label>
-
-                  <label>
-                    Description
-                    <textarea
-                      value={draft.description}
-                      onChange={(ev) =>
-                        setDraft((d) => ({ ...d, description: ev.target.value }))
-                      }
-                      rows={4}
-                    />
-                  </label>
-
-                  <label>
-                    Type
-                    <select
-                      value={draft.type}
-                      onChange={(ev) =>
-                        setDraft((d) => ({ ...d, type: ev.target.value }))
-                      }
-                    >
-                      <option value="photography">Photography</option>
-                      <option value="artifact">Artifact</option>
-                      <option value="space">Space</option>
-                    </select>
-                  </label>
-
-                  <label>
-                    Image URL
-                    <input
-                      value={draft.image_url}
-                      onChange={(ev) =>
-                        setDraft((d) => ({ ...d, image_url: ev.target.value }))
-                      }
-                    />
-                  </label>
-
-                  <label>
-                    Status
-                    <select
-                      value={draft.status}
-                      onChange={(ev) =>
-                        setDraft((d) => ({ ...d, status: ev.target.value }))
-                      }
-                    >
-                      <option value="SUBMITTED">Submitted</option>
-                      <option value="APPROVED">Approved</option>
-                      <option value="DECLINED">Declined</option>
-                    </select>
-                  </label>
-
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                    <button
-                      disabled={busyId === e.id}
-                      onClick={() => saveEdit(e.id)}
-                    >
-                      💾 Save
-                    </button>
-
-                    <button disabled={busyId === e.id} onClick={cancelEdit}>
-                      Cancel
-                    </button>
+                <div>
+                  <strong>{e.title}</strong>
+                  <div style={{ opacity: 0.8 }}>{e.type}</div>
+                  <div style={{ opacity: 0.6, fontSize: 12 }}>
+                    {e.created_at ? new Date(e.created_at).toLocaleString() : ""}
                   </div>
                 </div>
-              )}
 
-            </div>
-          ))}
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <button
+                    disabled={busyId === e.id}
+                    onClick={() => setStatus(e.id, "APPROVED")}
+                  >
+                    ✅ Approve
+                  </button>
+
+                  <button
+                    disabled={busyId === e.id}
+                    onClick={() => setStatus(e.id, "DECLINED")}
+                  >
+                    ❌ Decline
+                  </button>
+
+                  <button
+                    disabled={busyId === e.id}
+                    onClick={() => startEdit(e)}
+                  >
+                    ✏️ Edit
+                  </button>
+
+                  <button
+                    disabled={busyId === e.id}
+                    onClick={() => deleteEntry(e.id)}
+                  >
+                    🗑 Delete
+                  </button>
+                </div>
+
+                {editingId === e.id && (
+                  <div className="card" style={{ padding: 12, display: "grid", gap: 8 }}>
+                    <EntryFieldsSection form={form} setForm={setForm} />
+
+                    <label>
+                      Status
+                      <select
+                        value={form.status}
+                        onChange={(ev) =>
+                          setForm((p) => ({ ...p, status: ev.target.value }))
+                        }
+                      >
+                        <option value="SUBMITTED">Submitted</option>
+                        <option value="APPROVED">Approved</option>
+                        <option value="DECLINED">Declined</option>
+                      </select>
+                    </label>
+
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      <button type="button" onClick={() => setShowAuthor(v => !v)}>+ Author</button>
+                      <button type="button" onClick={() => setShowLocation(v => !v)}>+ Location</button>
+                      <button type="button" onClick={() => setShowMedia(v => !v)}>+ Media</button>
+                    </div>
+
+                    <LocationSection
+                      open={showLocation}
+                      location={location}
+                      setLocation={setLocation}
+                      lookup={locLookup}
+                      newLocation={newLocation}
+                      setNewLocation={setNewLocation}
+                    />
+
+                    <AuthorSection
+                      open={showAuthor}
+                      author={author}
+                      setAuthor={setAuthor}
+                      lookup={authorLookup}
+                      newAuthor={newAuthor}
+                      setNewAuthor={setNewAuthor}
+                    />
+
+                    <MediaSection
+                      open={showMedia}
+                      mediaFile={mediaFile}
+                      setMediaFile={setMediaFile}
+                      mediaCredits={mediaCredits}
+                      setMediaCredits={setMediaCredits}
+                      roundMb={roundMb}
+                    />
+
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      <button
+                        disabled={busyId === e.id}
+                        onClick={() => saveEdit(e.id)}
+                      >
+                        💾 Save
+                      </button>
+
+                      <button disabled={busyId === e.id} onClick={cancelEdit}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            )
+          })}
         </section>
       )}
     </main>

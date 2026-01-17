@@ -15,8 +15,8 @@ const INITIAL_FORM = {
     type: "",
     imageUrl: "",
     keywordsRaw: "",
-    originDate: "",
-    externalLinksRaw: "",
+    origin_date: "",
+    external_links_raw: "",
 };
 
 function SubmitPage() {
@@ -34,7 +34,7 @@ function SubmitPage() {
     // Author select + create
     const [author, setAuthor] = useState(null);
     const [newAuthor, setNewAuthor] = useState({ name: "", bio: "", birth_date: "", death_date: "" });
-    const authorLookup = useLookup({ table: "authors", select: "id,name" });
+    const authorLookup = useLookup({ table: "authors_public", select: "id,name" });
 
     // Location select + create
     const [location, setLocation] = useState(null);   // {id,name} | null
