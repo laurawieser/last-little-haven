@@ -10,6 +10,15 @@ import LocationSection from "../components/LocationSection";
 import AuthorSection from "../components/AuthorSection";
 import MediaSection from "../components/MediaSection";
 
+function getCoverUrl(entry) {
+  const media = Array.isArray(entry?.media_files) ? entry.media_files : [];
+
+  const cover =
+    media.find((m) => m.role === "COVER") ||
+    media[0]; // fallback: erstes Medium
+
+  return cover?.file_url || entry?.image_url || null;
+}
 
 function AdminPage() {
   const INITIAL_FORM = {
@@ -52,7 +61,7 @@ function AdminPage() {
     const { data, error } = await supabase
       .from("archive_entries")
       .select(`
-        id,title,description,type,created_at,created_by,status,
+        id,title,description,type,image_url,created_at,created_by,status,
         keywords,origin_date,external_links,author_id,location_id,
         media_files ( id, file_url, role, credits )
       `)
@@ -249,8 +258,7 @@ function AdminPage() {
       ) : (
         <section style={{ display: "grid", gap: 12 }}>
           {pending.map((e) => {
-            const cover = (e.media_files || []).find((m) => m.role === "COVER");
-            const coverUrl = cover?.file_url || null;
+            const coverUrl = getCoverUrl(e);
 
             return (
               <div key={e.id} className="card" style={{ display: "grid", gap: 8 }}>
@@ -268,9 +276,11 @@ function AdminPage() {
                     }}
                     loading="lazy"
                     onError={(ev) => {
-                      ev.currentTarget.style.display = "none";
+                      console.log("IMG ERROR", { entryId: e.id, coverUrl });
+                      //ev.currentTarget.style.display = "none";
                     }}
                   />
+                  
                 ) : null}
 
 

@@ -65,16 +65,6 @@ export default function EntryFieldsSection({ form, setForm }) {
                     onChange={(e) => set("external_links_raw", e.target.value)}
                 />
             </label>
-
-            <label>
-                Image URL (optional)
-                <input
-                    value={form.imageUrl}
-                    onChange={(e) => set("imageUrl", e.target.value)}
-                    type="url"
-                    placeholder="https://picsum.photos/300/200"
-                />
-            </label>
         </>
     );
 }

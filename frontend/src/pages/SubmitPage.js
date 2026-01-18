@@ -13,7 +13,7 @@ const INITIAL_FORM = {
     title: "",
     description: "",
     type: "",
-    imageUrl: "",
+    // imageUrl: "",
     keywordsRaw: "",
     origin_date: "",
     external_links_raw: "",
@@ -49,6 +49,8 @@ function SubmitPage() {
     });
 
     // Media
+    const [mediaMode, setMediaMode] = useState("upload"); // "upload" | "external"
+    const [externalUrl, setExternalUrl] = useState("");
     const [mediaFile, setMediaFile] = useState(null); // File|null
     const [mediaCredits, setMediaCredits] = useState("");
 
@@ -64,7 +66,7 @@ function SubmitPage() {
                 form,
                 authorState: { show: showAuthor, author, newAuthor },
                 locationState: { show: showLocation, location, newLocation },
-                mediaState: { show: showMedia, file: mediaFile, credits: mediaCredits },
+                mediaState: { show: showMedia, mode: mediaMode, file: mediaFile, externalUrl, credits: mediaCredits },
             });
 
             setSuccessMsg("Thank you! Your submission has been saved.");
@@ -82,7 +84,9 @@ function SubmitPage() {
             locLookup.setQ(""); 
             locLookup.setOpen(false);
 
+            setMediaMode("upload");
             setMediaFile(null);
+            setExternalUrl("");
             setMediaCredits("");
 
             setShowAuthor(false);
@@ -132,8 +136,12 @@ function SubmitPage() {
                 {/* MEDIA */}
                 <MediaSection
                     open={showMedia}
+                    mode={mediaMode}
+                    setMode={setMediaMode}
                     mediaFile={mediaFile}
                     setMediaFile={setMediaFile}
+                    externalUrl={externalUrl}
+                    setExternalUrl={setExternalUrl}
                     mediaCredits={mediaCredits}
                     setMediaCredits={setMediaCredits}
                     roundMb={roundMb}
