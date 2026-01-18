@@ -22,14 +22,19 @@ function parseKeywords(input) {
   return [];
 }
 
-function tryParseJSON(str) {
-  if (!str) return [];
-  try {
-    const parsed = JSON.parse(str);
-    return Array.isArray(parsed) ? parsed : [parsed];
-  } catch {
-    return [str];
+function tryParseJSON(val) {
+  if (val == null) return [];
+  if (Array.isArray(val)) return val;
+  if (typeof val === "object") return [val];
+  if (typeof val === "string") {
+    try {
+      const parsed = JSON.parse(val);
+      return Array.isArray(parsed) ? parsed : [parsed];
+    } catch {
+      return [val];
+    }
   }
+  return [];
 }
 
 function getEntryCoverUrl(entry) {
@@ -42,7 +47,6 @@ function DetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, role } = useAuth();
-
   const [entry, setEntry] = useState(null);
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -159,7 +163,14 @@ function DetailPage() {
   if (!entry) return <div>Eintrag nicht gefunden.</div>;
 
   const keywords = parseKeywords(entry.keywords);
-  const external_links = tryParseJSON(entry.external_links);
+  const external_links = tryParseJSON(entry.external_links)
+  .flatMap((v) => {
+    if (typeof v === "string") return [v];
+    if (v && typeof v === "object") return [v.url, v.href].filter(Boolean);
+    return [];
+  })
+  .map((s) => String(s).trim())
+  .filter((s) => s.length > 0);
   const hasTitle = entry.title && entry.title.trim() !== '';
   const displayType = (entry.type || 'ORT').toUpperCase();
 
@@ -193,44 +204,54 @@ function DetailPage() {
         {entry.description && (
           <div className="description-box">
             <p>{entry.description}</p>
-            {entry.origin_date && <p><strong>Origin Date:</strong> {entry.origin_date}</p>}
-            {entry.author_name && <p><strong>Author:</strong> {entry.author_name}</p>}
+          </div>
+        )}
 
-            {/* ← LOCATION ROW - LeafletMap! */}
-            {location && (
-              <div className="location-row">
-                <div className="location-map-small">
-                  <LeafletMap
-                    center={[parseFloat(location.latitude), parseFloat(location.longitude)]}
-                    zoom={15}
-                    height="100%"
-                  >
-                    <Marker
-                      position={[parseFloat(location.latitude), parseFloat(location.longitude)]}
-                    >
-                      <Popup>
-                        {location.name}<br />
-                        {location.address}
-                      </Popup>
-                    </Marker>
-                  </LeafletMap>
-                </div>
-                <div className="location-info-right">
-                  <p><strong>{location.name}</strong></p>
-                  <p>{location.address}, {location.city}</p>
-                  {external_links.length > 0 && (
-                    <p className="location-links">
-                      {external_links.map((l, i) => (
-                        <span key={i}>
-                          <a href={l} target="_blank" rel="noreferrer">{l}</a>
-                          {i < external_links.length - 1 && <> • </>}
-                        </span>
-                      ))}
-                    </p>
-                  )}
-                </div>
-              </div>
+        {(entry.origin_date || entry.author_name) && (
+          <div className="description-box">
+            {entry.origin_date && (
+              <p><strong>Origin Date:</strong> {entry.origin_date}</p>
             )}
+            {entry.author_name && (
+              <p><strong>Author:</strong> {entry.author_name}</p>
+            )}
+          </div>
+        )}
+        {/* ← LOCATION ROW - LeafletMap! */}
+        {location && (
+          <div className="description-box">
+            <div className="location-row">
+              <div className="location-map-small">
+                <LeafletMap
+                  center={[parseFloat(location.latitude), parseFloat(location.longitude)]}
+                  zoom={15}
+                  height="100%"
+                >
+                  <Marker
+                    position={[parseFloat(location.latitude), parseFloat(location.longitude)]}
+                  >
+                    <Popup>
+                      {location.name}<br />
+                      {location.address}
+                    </Popup>
+                  </Marker>
+                </LeafletMap>
+              </div>
+              <div className="location-info-right">
+                <p><strong>{location.name}</strong></p>
+                <p>{location.address}, {location.city}</p>
+                {external_links.length > 0 && (
+                  <p className="location-links">
+                    {external_links.map((l, i) => (
+                      <span key={i}>
+                        <a href={l} target="_blank" rel="noreferrer">{l}</a>
+                        {i < external_links.length - 1 && <> • </>}
+                      </span>
+                    ))}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
@@ -274,7 +295,6 @@ function DetailPage() {
       )}
     </main>
   );
-
 }
 
 export default DetailPage;
