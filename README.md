@@ -33,21 +33,38 @@ last-little-haven/
 ├─ backend/               # (geplant) Backend / REST API (Node.js + Express)
 │  ├─ src/
 │  │  └─ server.js
+│  ├─ package-lock.json
 │  └─ package.json
 ├─ frontend/              # Web-Frontend (React + React Router + Supabase)
 │  ├─ public/
 │  └─ src/
+│     ├─ auth
+│     │  ├─ AuthContext.js
+│     │  └─ ProtectedRoute.js
+│     ├─ components
+│     ├─ hooks
 │     ├─ index.js
 │     ├─ App.js
 │     ├─ lib/
+│     │  ├─ archiveEntries.js
+│     │  ├─ entities.js
+│     │  ├─ formUtils.js
+│     │  ├─ media.js
 │     │  └─ supabase.js   # Supabase-Client
 │     ├─ pages/
-│     │  ├─ HomePage.js
+│     │  ├─ AccountPage.js
+│     │  ├─ AdminPage.js
 │     │  ├─ ArchivePage.js
-│     │  ├─ MapPage.js
-│     │  ├─ SubmitPage.js
+│     │  ├─ DetailPage.js
+│     │  ├─ EventsList.js
+│     │  ├─ FavoritesPage.js
+│     │  ├─ ForgotPasswordPage.js
+│     │  ├─ HomePage.js
 │     │  ├─ LoginPage.js
-│     │  └─ AdminPage.js
+│     │  ├─ MapPage.js
+│     │  ├─ MySubmissionsPage.js
+│     │  ├─ ResetPasswordPage.js
+│     │  └─ SubmitPage.js
 │     └─ styles/
 │        ├─ main.css
 │        ├─ base/
