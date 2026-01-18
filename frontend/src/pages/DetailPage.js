@@ -162,7 +162,9 @@ function DetailPage() {
   const external_links = tryParseJSON(entry.external_links);
   const hasTitle = entry.title && entry.title.trim() !== '';
   const displayType = (entry.type || 'ORT').toUpperCase();
-  const heroUrl = getEntryCoverUrl(entry) || "https://placehold.co/600x400/2B2E30/C4C7C8?text=LLH";
+
+  const PLACEHOLDER = "/llh_logo.webp";
+  const heroUrl = getEntryCoverUrl(entry) || PLACEHOLDER;
 
   return (
     <main className="detail-container">
@@ -172,7 +174,8 @@ function DetailPage() {
           alt={entry.title || entry.type}
           className="detail-image"
           onError={(e) => {
-            e.currentTarget.src = "https://placehold.co/600x400/2B2E30/C4C7C8?text=LLH";
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = PLACEHOLDER;
           }}
         />
         <div className="image-overlay-tab">
@@ -263,7 +266,8 @@ function DetailPage() {
             alt={entry.title || entry.type}
             className="detail-image"
             onError={(e) => {
-              e.currentTarget.src = "https://placehold.co/600x400/2B2E30/C4C7C8?text=LLH";
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = PLACEHOLDER;
             }}
           />
         </div>

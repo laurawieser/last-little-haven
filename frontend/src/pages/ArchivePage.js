@@ -272,20 +272,20 @@ function ArchivePage() {
 
         {filteredEntries.map((entry) => {
           const coverUrl = getEntryCoverUrl(entry);
+          const PLACEHOLDER = "/llh_logo.webp";
 
           return (
             <Link to={`/archive/${entry.id}`} key={entry.id} className="card-link">
               <div className="card">
-                {coverUrl && (
-                  <img
-                    src={coverUrl}
-                    alt={entry.title}
-                    className="card-image"
-                    onError={(e) =>
-                      (e.currentTarget.src = "https://placehold.co/300x300?text=LLH")
-                    }
-                  />
-                )}
+                <img
+                  src={coverUrl || PLACEHOLDER}
+                  alt={entry.title}
+                  className="card-image"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = PLACEHOLDER;
+                  }}
+                />
                 <h2>{entry.title}</h2>
                 <p>{entry.type}</p>
 
