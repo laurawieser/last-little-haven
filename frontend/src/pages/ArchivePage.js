@@ -25,6 +25,13 @@ function parseOriginDate(originDate) {
   return null;
 }
 
+function getEntryCoverUrl(entry) {
+  const media = Array.isArray(entry?.media_files) ? entry.media_files : [];
+  const cover = media.find((m) => m.role === "COVER") || media[0];
+  // cover.file_url kann externe https URL sein ODER storage public URL ODER storage path (falls du so speicherst)
+  return cover?.file_url || entry?.image_url || null; // image_url nur legacy fallback
+}
+
 function ArchivePage() {
   const [entries, setEntries] = useState([]);
   const [locationsById, setLocationsById] = useState({});
@@ -47,7 +54,7 @@ function ArchivePage() {
 
       const { data, error } = await supabase
         .from("archive_entries")
-        .select("*")
+        .select(`*, media_files ( id, file_url, role, credits )`)
         .eq("status", "APPROVED")
         .order("created_at", { ascending: false });
 
@@ -263,37 +270,42 @@ function ArchivePage() {
           <p>No entries found.</p>
         )}
 
-        {filteredEntries.map((entry) => (
-          <Link to={`/archive/${entry.id}`} key={entry.id} className="card-link">
-            <div className="card">
-              {entry.image_url && (
-                <img
-                  src={entry.image_url}
-                  alt={entry.title}
-                  className="card-image"
-                  onError={(e) =>
-                    (e.currentTarget.src = "https://placehold.co/300x300?text=LLH")
-                  }
-                />
-              )}
-              <h2>{entry.title}</h2>
-              <p>{entry.type}</p>
+        {filteredEntries.map((entry) => {
+          const coverUrl = getEntryCoverUrl(entry);
 
-              {/* Optional: show location + originDate if available */}
-              {entry.location_id && locationsById[entry.location_id] && (
-                <p style={{ opacity: 0.75 }}>
-                  {locationsById[entry.location_id].city} — {locationsById[entry.location_id].name}
-                </p>
-              )}
+          return (
+            <Link to={`/archive/${entry.id}`} key={entry.id} className="card-link">
+              <div className="card">
+                {coverUrl && (
+                  <img
+                    src={coverUrl}
+                    alt={entry.title}
+                    className="card-image"
+                    onError={(e) =>
+                      (e.currentTarget.src = "https://placehold.co/300x300?text=LLH")
+                    }
+                  />
+                )}
+                <h2>{entry.title}</h2>
+                <p>{entry.type}</p>
 
-              {entry.originDate && (
-                <p style={{ opacity: 0.65, fontSize: 12 }}>
-                  Origin date: {entry.originDate}
-                </p>
-              )}
-            </div>
-          </Link>
-        ))}
+                {/* Optional: show location + originDate if available */}
+                {entry.location_id && locationsById[entry.location_id] && (
+                  <p style={{ opacity: 0.75 }}>
+                    {locationsById[entry.location_id].city} — {locationsById[entry.location_id].name}
+                  </p>
+                )}
+
+                {entry.originDate && (
+                  <p style={{ opacity: 0.65, fontSize: 12 }}>
+                    Origin date: {entry.originDate}
+                  </p>
+                )}
+              </div>
+            </Link>
+          );
+
+        })}
       </section>
     </main>
   );

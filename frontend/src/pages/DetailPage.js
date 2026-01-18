@@ -32,6 +32,12 @@ function tryParseJSON(str) {
   }
 }
 
+function getEntryCoverUrl(entry) {
+  const media = Array.isArray(entry?.media_files) ? entry.media_files : [];
+  const cover = media.find((m) => m.role === "COVER") || media[0];
+  return cover?.file_url || entry?.image_url || null; // image_url nur legacy fallback
+}
+
 function DetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -50,7 +56,10 @@ function DetailPage() {
     async function loadEntry() {
       try {
         const { data: entryData, error: entryError } = await supabase
-          .from("archive_entries").select("*").eq("id", id).single();
+          .from("archive_entries")
+          .select(`*,media_files ( id, file_url, role, credits )`)
+          .eq("id", id)
+          .single();
         if (entryError) throw entryError;
         setEntry(entryData);
 
@@ -120,29 +129,29 @@ function DetailPage() {
   }
 
   async function handleShare() {
-  const url = `${window.location.origin}/archive/${id}`;
-  const text = entry?.title
-    ? `Check out this archive entry: ${entry.title}`
-    : "Check out this archive entry";
+    const url = `${window.location.origin}/archive/${id}`;
+    const text = entry?.title
+      ? `Check out this archive entry: ${entry.title}`
+      : "Check out this archive entry";
 
-  // Native share (mobile browsers)
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: entry?.title || "Last Little Haven",
-        text,
-        url,
-      });
-      return;
-    } catch (e) {
-      // User cancelled sharing → ignore
+    // Native share (mobile browsers)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: entry?.title || "Last Little Haven",
+          text,
+          url,
+        });
+        return;
+      } catch (e) {
+        // User cancelled sharing → ignore
+      }
     }
-  }
 
-  // Fallback: WhatsApp share
-  const wa = `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`;
-  window.open(wa, "_blank", "noopener,noreferrer");
-}
+    // Fallback: WhatsApp share
+    const wa = `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`;
+    window.open(wa, "_blank", "noopener,noreferrer");
+  }
 
 
   if (loading) return <div className="loading">Lade Eintrag…</div>;
@@ -150,17 +159,21 @@ function DetailPage() {
   if (!entry) return <div>Eintrag nicht gefunden.</div>;
 
   const keywords = parseKeywords(entry.keywords);
-  const externalLinks = tryParseJSON(entry.externalLinks);
+  const external_links = tryParseJSON(entry.external_links);
   const hasTitle = entry.title && entry.title.trim() !== '';
   const displayType = (entry.type || 'ORT').toUpperCase();
+  const heroUrl = getEntryCoverUrl(entry) || "https://placehold.co/600x400/2B2E30/C4C7C8?text=LLH";
 
   return (
     <main className="detail-container">
       <div className="image-wrapper" onClick={() => setShowImage(true)}>
-        <img 
-          src={entry.image_url || "https://placehold.co/600x400/2B2E30/C4C7C8?text=LLH"} 
-          alt={entry.title || entry.type} 
-          className="detail-image" 
+        <img
+          src={heroUrl}
+          alt={entry.title || entry.type}
+          className="detail-image"
+          onError={(e) => {
+            e.currentTarget.src = "https://placehold.co/600x400/2B2E30/C4C7C8?text=LLH";
+          }}
         />
         <div className="image-overlay-tab">
           {hasTitle && <h1>{entry.title}</h1>}
@@ -177,7 +190,7 @@ function DetailPage() {
         {entry.description && (
           <div className="description-box">
             <p>{entry.description}</p>
-            {entry.originDate && <p><strong>Origin Date:</strong> {entry.originDate}</p>}
+            {entry.origin_date && <p><strong>Origin Date:</strong> {entry.origin_date}</p>}
             {entry.author_name && <p><strong>Author:</strong> {entry.author_name}</p>}
 
             {/* ← LOCATION ROW - LeafletMap! */}
@@ -202,12 +215,12 @@ function DetailPage() {
                 <div className="location-info-right">
                   <p><strong>{location.name}</strong></p>
                   <p>{location.address}, {location.city}</p>
-                  {externalLinks.length > 0 && (
+                  {external_links.length > 0 && (
                     <p className="location-links">
-                      {externalLinks.map((l, i) => (
+                      {external_links.map((l, i) => (
                         <span key={i}>
                           <a href={l} target="_blank" rel="noreferrer">{l}</a>
-                          {i < externalLinks.length - 1 && <> • </>}
+                          {i < external_links.length - 1 && <> • </>}
                         </span>
                       ))}
                     </p>
@@ -218,13 +231,13 @@ function DetailPage() {
           </div>
         )}
 
-        {!location && externalLinks.length > 0 && (
+        {!location && external_links.length > 0 && (
           <div className="description-box">
             <p className="location-links">
-              {externalLinks.map((l, i) => (
+              {external_links.map((l, i) => (
                 <span key={i}>
                   <a href={l} target="_blank" rel="noreferrer">{l}</a>
-                  {i < externalLinks.length - 1 && <> • </>}
+                  {i < external_links.length - 1 && <> • </>}
                 </span>
               ))}
             </p>
@@ -245,7 +258,14 @@ function DetailPage() {
 
       {showImage && (
         <div className="image-modal" onClick={() => setShowImage(false)}>
-          <img src={entry.image_url} alt={entry.title || entry.type} />
+          <img
+            src={heroUrl}
+            alt={entry.title || entry.type}
+            className="detail-image"
+            onError={(e) => {
+              e.currentTarget.src = "https://placehold.co/600x400/2B2E30/C4C7C8?text=LLH";
+            }}
+          />
         </div>
       )}
     </main>

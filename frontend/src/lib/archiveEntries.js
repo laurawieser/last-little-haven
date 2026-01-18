@@ -125,11 +125,12 @@ export async function createArchiveEntry({
     })
     : null;
 
-  const imageUrl = (form.imageUrl || "").trim();
   const hasUpload = !!mediaState?.file;
-  const hasUrl = !!imageUrl;
+  const externalUrl = (mediaState?.externalUrl || "").trim();
+  const hasExternalUrl = mediaState?.mode === "external" && !!externalUrl;
 
-  if (hasUpload && hasUrl) {
+
+  if (hasUpload && hasExternalUrl) {
     throw new Error("Please either upload a file OR provide an Image URL — not both.");
   }
 
@@ -158,8 +159,8 @@ export async function createArchiveEntry({
   // cover
   if (hasUpload) {
     await insertCoverMediaFromUpload({ entryId, file: mediaState.file, credits: mediaState.credits });
-  } else if (hasUrl) {
-    await insertCoverMediaFromUrl({ entryId, url: imageUrl, credits: mediaState?.credits });
+  } else if (hasExternalUrl) {
+    await insertCoverMediaFromUrl({ entryId, url: externalUrl, credits: mediaState?.credits });
   }
 
   return { id: entryId };
@@ -231,11 +232,11 @@ export async function updateArchiveEntry({
   if (updErr) throw updErr;
 
   // 2) Upload cover file
-  const imageUrl = (form.imageUrl || "").trim();
   const hasUpload = !!mediaState?.file;
-  const hasUrl = !!imageUrl;
+  const externalUrl = (mediaState?.externalUrl || "").trim();
+  const hasExternalUrl = mediaState?.mode === "external" && !!externalUrl;
 
-  if (hasUpload && hasUrl) {
+  if (hasUpload && hasExternalUrl) {
     throw new Error("Please either upload a file OR provide an Image URL — not both.");
   }
 
@@ -245,10 +246,10 @@ export async function updateArchiveEntry({
       file: mediaState.file,
       credits: mediaState.credits,
     });
-  } else if (hasUrl) {
+  } else if (hasExternalUrl) {
     await insertCoverMediaFromUrl({
       entryId,
-      url: imageUrl,
+      url: externalUrl,
       credits: mediaState?.credits,
     });
   }
